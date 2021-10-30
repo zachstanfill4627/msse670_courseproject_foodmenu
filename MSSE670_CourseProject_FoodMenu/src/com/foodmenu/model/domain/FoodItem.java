@@ -151,14 +151,6 @@ public class FoodItem implements Serializable {
 		this.ingredients = ingredients;
 	}
 	
-	/**
-	 * @param ingredients the ingredients to set
-	 */
-	public void updateIngredients(String ingredient) {
-		this.ingredients.add(ingredient);
-	}
-
-
 	/** 
 	 * toString() method
 	 * @return Formatted String listing all variables for the FoodItem Object

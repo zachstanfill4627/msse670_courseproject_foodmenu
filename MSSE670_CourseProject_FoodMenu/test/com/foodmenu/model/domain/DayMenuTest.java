@@ -6,6 +6,7 @@ package com.foodmenu.model.domain;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -167,12 +168,16 @@ public class DayMenuTest {
 		foodList.add(new FoodItem(foodName, category, healthValue, 
 				prepTime, recipe, ingredients));		
 		
+				
 		menuName = "Pot Roast Dinner with Salad and Ice Cream";
 		complexityValue = 6; 
 		
 		menuList.add(new MenuItem(menuName, foodList, complexityValue));
 		
-		dayMenu = new DayMenu(menuList);
+		Calendar date = Calendar.getInstance();
+		date.set(2021, 10, 29);
+		
+		dayMenu = new DayMenu(date, menuList);
 	}
 	
 	@Test

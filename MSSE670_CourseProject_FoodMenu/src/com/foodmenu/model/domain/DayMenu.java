@@ -3,6 +3,7 @@ package com.foodmenu.model.domain;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * 
@@ -14,6 +15,9 @@ public class DayMenu implements Serializable {
 	private static final long serialVersionUID = 1234567L;
 	
 	private final DecimalFormat df = new DecimalFormat("#.##");
+	
+	/** Specified date for the given DayMenu */
+	private Calendar date;
 	
 	/** List of Menu Items for the given DayMenu Object */ 
 	private ArrayList<MenuItem> menuList = new ArrayList<MenuItem>();
@@ -35,8 +39,9 @@ public class DayMenu implements Serializable {
 	 * Overloaded DayMenu Object Constructor
 	 * @param menuList
 	 */
-	public DayMenu(ArrayList<MenuItem> menuList) {
+	public DayMenu(Calendar date, ArrayList<MenuItem> menuList) {
 		super();
+		this.date = date;
 		this.menuList.addAll(menuList);
 		menuList.forEach(item -> {
 			this.complexityValue += item.getComplexityValue();
@@ -46,6 +51,20 @@ public class DayMenu implements Serializable {
 		this.healthValue = this.healthValue	/ menuList.size();
 	}
 
+	/**
+	 * @return the date
+	 */
+	public Calendar getDate() {
+		return date;
+	}
+
+	/**
+	 * @param date the date to set
+	 */
+	public void setDate(Calendar date) {
+		this.date = date;
+	}
+	
 	/**
 	 * @return the menuList
 	 */
@@ -84,8 +103,9 @@ public class DayMenu implements Serializable {
 	/**
 	 * @param healthValue the healthValue to set
 	 */
-	public void setHealthValue(double healthValue) {
-		this.healthValue = healthValue;
+	public void setHealthValue() {
+		menuList.forEach(item -> this.healthValue+=item.getHealthValue());
+		this.healthValue = this.healthValue / menuList.size();
 	}
 
 	/** 
@@ -94,6 +114,9 @@ public class DayMenu implements Serializable {
 	 */
 	public String toString() {
 		StringBuffer strBfr = new StringBuffer();
+		strBfr.append(String.format("Scheduled Day: %d-%d-%d\n", 
+				date.get(Calendar.YEAR), date.get(Calendar.MONTH), 
+				date.get(Calendar.DATE)));
 		strBfr.append("Day Complexity Value: " + complexityValue);
 		strBfr.append("\nDay Health Value: " + df.format(healthValue));
 		menuList.forEach(item -> { 
@@ -110,6 +133,9 @@ public class DayMenu implements Serializable {
 	 */
 	public String toSummaryString() {
 		StringBuffer strBfr = new StringBuffer();
+		strBfr.append(String.format("Scheduled Day: %d-%d-%d\n", 
+				date.get(Calendar.YEAR), date.get(Calendar.MONTH), 
+				date.get(Calendar.DATE)));
 		strBfr.append("Day Complexity Value: " + complexityValue);
 		strBfr.append("\nDay Health Value: " + df.format(healthValue));
 		menuList.forEach(item -> { 
@@ -128,6 +154,7 @@ public class DayMenu implements Serializable {
 	 * @return boolean if all fields for DayMenu object is valid
 	 */
 	 public boolean validate() {
+		 if(date == null) return false;
 		 if(menuList == null) return false;
 		 if(complexityValue < 0) return false;
 		 if(healthValue < 0) return false;

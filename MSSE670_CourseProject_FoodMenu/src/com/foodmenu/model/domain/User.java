@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @author Zach Stanfill
  * Domain User Class
  */
-public class User {
+public class User implements Serializable {
 	
 	private static final long serialVersionUID = 1234567L;
 	
@@ -33,7 +33,7 @@ public class User {
 	private String role;
 	
 	/** Default Constructor */
-	public void User () {
+	public User () {
 		
 	}
 	
