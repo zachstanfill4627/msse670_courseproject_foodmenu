@@ -5,6 +5,8 @@ package com.foodmenu.model.domain;
 
 import static org.junit.Assert.*;
 import java.util.ArrayList;
+
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -14,9 +16,14 @@ import org.junit.Test;
 public class MenuItemTest {
 	
 	private final String TestClass = "MenuItem"; 
-
-	@Test
-	public void testValidate() {
+	
+	private MenuItem menuItem;
+	
+	@Before
+	public void setup() {
+		
+		ArrayList<FoodItem> foodList = new ArrayList<FoodItem>();
+		
 		String foodName = "Pot Roast";
 		String category = "American";
 		int healthValue = 4;
@@ -39,8 +46,8 @@ public class MenuItemTest {
 			add("Onions");
 		}} ; 
 		
-		FoodItem item1 = new FoodItem(foodName, category, healthValue, 
-				prepTime, recipe, ingredients);
+		foodList.add(new FoodItem(foodName, category, healthValue, 
+				prepTime, recipe, ingredients));
 			
 		recipe.clear();
 		ingredients.clear();
@@ -64,8 +71,8 @@ public class MenuItemTest {
 			add("Salad Dressing (Ranch)");
 		}} ;
 		
-		FoodItem item2 = new FoodItem(foodName, category, healthValue, 
-				prepTime, recipe, ingredients);
+		foodList.add(new FoodItem(foodName, category, healthValue, 
+				prepTime, recipe, ingredients));
 		
 		recipe.clear();
 		ingredients.clear();
@@ -83,22 +90,64 @@ public class MenuItemTest {
 			add("Hot Fudge");
 		}} ;
 		
-		FoodItem item3 = new FoodItem(foodName, category, healthValue, 
-				prepTime, recipe, ingredients);
+		foodList.add(new FoodItem(foodName, category, healthValue, 
+				prepTime, recipe, ingredients));
 		
-		ArrayList<FoodItem> foodList = new ArrayList<FoodItem>() {{
-			add(item1);
-			add(item2);
-			add(item3);
-		}}; 
+
 		
 		String menuName = "Pot Roast Dinner with Salad and Ice Cream";
-				int complexityValue = 2; 
+		int complexityValue = 2;
 		
-		MenuItem menuItem1 = new MenuItem(menuName, foodList, complexityValue);
+		menuItem = new MenuItem(menuName, foodList, complexityValue);
+	}
+
+	@Test
+	public void testValidate() {
 		
-		assertTrue ("menuItem1 validates",menuItem1.validate());
+		assertTrue ("menuItem1 validates",menuItem.validate());
     		System.out.println(TestClass + ".testValidate PASSED");
+	}
+	
+	// Comment @Test Line to Avoid Running This Test
+	@Test
+	public void testMenuItemGenerateShoppingList() {
+		System.out.println("####################TestMethod: " + 
+				Thread.currentThread().getStackTrace()[1].getMethodName() + 
+				" Begin####################");
+		
+		System.out.println(menuItem.generateShoppingList());
+		
+		System.out.println("####################TestMethod: " + 
+				Thread.currentThread().getStackTrace()[1].getMethodName() + 
+				" End######################");
+	}
+	
+	// Comment @Test Line to Avoid Running This Test
+	@Test
+	public void testMenuItemToString() {
+		System.out.println("####################TestMethod: " + 
+				Thread.currentThread().getStackTrace()[1].getMethodName() + 
+				" Begin####################");
+		
+		System.out.println(menuItem.toString());
+		
+		System.out.println("####################TestMethod: " + 
+				Thread.currentThread().getStackTrace()[1].getMethodName() + 
+				" End######################");
+	}
+
+	// Comment @Test Line to Avoid Running This Test
+	@Test
+	public void testMenuItemToSummaryString() {
+		System.out.println("####################TestMethod: " + 
+				Thread.currentThread().getStackTrace()[1].getMethodName() + 
+				" Begin####################");
+		
+		System.out.println(menuItem.toSummaryString());
+		
+		System.out.println("####################TestMethod: " + 
+				Thread.currentThread().getStackTrace()[1].getMethodName() + 
+				" End######################");		
 	}
 
 }

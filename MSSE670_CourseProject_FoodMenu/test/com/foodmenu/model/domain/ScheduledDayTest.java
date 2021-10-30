@@ -6,18 +6,19 @@ package com.foodmenu.model.domain;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @author Zach Stanfill
+ * @author zach
  *
  */
-public class DayMenuTest {
+public class ScheduledDayTest {
 	
 	private final String TestClass = "DayMenu";
-	
+
 	private DayMenu dayMenu;
 
 	@Before
@@ -176,38 +177,14 @@ public class DayMenuTest {
 	}
 	
 	@Test
-	public void testValidate() { 
+	public void testValidate() {
+		Calendar date = Calendar.getInstance();
+		date.set(2021, 10, 29);
 		
-		assertTrue ("menuItem1 validates",dayMenu.validate());
+		ScheduledDay scheduledDay = new ScheduledDay(date, dayMenu);
+		
+		assertTrue ("scheduledDay validates",scheduledDay.validate());
 			System.out.println(TestClass + ".testValidate PASSED");
-	}
-	
-	// Comment @Test Line to Avoid Running This Test
-	@Test
-	public void testDayMenuToString() {
-		System.out.println("####################TestMethod: " + 
-				Thread.currentThread().getStackTrace()[1].getMethodName() + 
-				" Begin####################");
-		
-		System.out.println(dayMenu.toString());
-		
-		System.out.println("####################TestMethod: " + 
-				Thread.currentThread().getStackTrace()[1].getMethodName() + 
-				" End######################");
-	}
-
-	// Comment @Test Line to Avoid Running This Test
-	@Test
-	public void testDayMenuToSummaryString() {
-		System.out.println("####################TestMethod: " + 
-				Thread.currentThread().getStackTrace()[1].getMethodName() + 
-				" Begin####################");
-		
-		System.out.println(dayMenu.toSummaryString());
-		
-		System.out.println("####################TestMethod: " + 
-				Thread.currentThread().getStackTrace()[1].getMethodName() + 
-				" End######################");		
 	}
 
 }

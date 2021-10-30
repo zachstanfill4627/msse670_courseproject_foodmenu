@@ -150,6 +150,13 @@ public class FoodItem implements Serializable {
 	public void setIngredients(ArrayList<String> ingredients) {
 		this.ingredients = ingredients;
 	}
+	
+	/**
+	 * @param ingredients the ingredients to set
+	 */
+	public void updateIngredients(String ingredient) {
+		this.ingredients.add(ingredient);
+	}
 
 
 	/** 

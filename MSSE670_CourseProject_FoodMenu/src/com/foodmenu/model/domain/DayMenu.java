@@ -26,7 +26,7 @@ public class DayMenu implements Serializable {
 	 */
 	private double healthValue = 0.0;
 	
-	/** Default Menu Object constructor */
+	/** Default DayMenu Object constructor */
 	public DayMenu() {
 		
 	}	
@@ -125,7 +125,7 @@ public class DayMenu implements Serializable {
 	
 	/**
 	 * validate() method
-	 * @return boolean if all fields for MenuItem object is valid
+	 * @return boolean if all fields for DayMenu object is valid
 	 */
 	 public boolean validate() {
 		 if(menuList == null) return false;
