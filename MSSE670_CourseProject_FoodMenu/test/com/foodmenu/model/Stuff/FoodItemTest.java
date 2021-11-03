@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * @author Zach Stanfill
  *
  */
-public class FoodItemTest {
+public class FoodItemTest  {
 	
 	private final String TestClass = "FoodItem";
 	
@@ -48,7 +48,7 @@ public class FoodItemTest {
 	}
 	
 	// Comment @Test Line to Avoid Running This Test
-	//@Test
+	@Test
 	public void testFoodItemToString() {
 		System.out.println("####################TestMethod: " + 
 				Thread.currentThread().getStackTrace()[1].getMethodName() + 
@@ -62,7 +62,7 @@ public class FoodItemTest {
 	}
 	
 	// Comment @Test Line to Avoid Running This Test
-	//@Test
+	@Test
 	public void testFoodItemToSummaryString() {
 		System.out.println("####################TestMethod: " + 
 				Thread.currentThread().getStackTrace()[1].getMethodName() + 

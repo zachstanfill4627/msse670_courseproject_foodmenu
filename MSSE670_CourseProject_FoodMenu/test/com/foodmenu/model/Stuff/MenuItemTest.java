@@ -4,9 +4,7 @@
 package com.foodmenu.model.domain;
 
 import static org.junit.Assert.*;
-
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,95 +13,22 @@ import org.junit.Test;
  * @author Zach Stanfill
  *
  */
-public class DayMenuTest {
+public class MenuItemTest {
 	
-	private final String TestClass = "DayMenu";
+	private final String TestClass = "MenuItem"; 
 	
-	private DayMenu dayMenu;
-
+	private MenuItem menuItem;
+	
 	@Before
 	public void setup() {
 		
 		ArrayList<FoodItem> foodList = new ArrayList<FoodItem>();
-		ArrayList<MenuItem> menuList = new ArrayList<MenuItem> ();
-		String menuName = "";
-		int complexityValue = 0;
-		String foodName = "";
-		String category = "";
-		int healthValue = 0;
-		int prepTime = 0;
-		ArrayList<String> recipe = new ArrayList<String>();
-		ArrayList <String> ingredients = new ArrayList<String>();
 		
-		foodName = "Cherrios Cereal";
-		category = "Other";
-		healthValue = 3;
-		prepTime = 5;
-		recipe = new ArrayList<String>() {{
-			add("Pour Cereal into Bowl.");
-			add("Pour Milk into Bowl.");
-		}};
-		ingredients = new ArrayList<String>() {{
-			add("Cereal");
-			add("Milk");
-		}};
-		
-		foodList.add(new FoodItem(foodName, category, healthValue, 
-				prepTime, recipe, ingredients));
-		
-		menuName = "Cherrios Breakfast";
-		complexityValue = 2;
-		
-		menuList.add(new MenuItem(menuName, foodList, complexityValue));
-		
-		foodList.clear();
-		
-		foodName = "McDonalds Cheeseburger";
-		category = "American";
-		healthValue = 1;
-		prepTime = 0;
-		recipe = new ArrayList<String>() {{
-			add("Drive to McDonalds");
-			add("Order Cheeseburger");
-			add("Pay at 1st Window");
-			add("Collect food at second window");
-		}};
-		ingredients = new ArrayList<String>() {{
-			add("Money");
-			add("Car+gas");
-		}};
-		
-		foodList.add(new FoodItem(foodName, category, healthValue, 
-				prepTime, recipe, ingredients));
-		
-		foodName = "McDonalds Fries";
-		category = "American";
-		healthValue = 1;
-		prepTime = 0;
-		recipe = new ArrayList<String>() {{
-			add("Drive to McDonalds");
-			add("Order Fries");
-			add("Pay at 1st Window");
-			add("Collect food at second window");
-		}};
-		ingredients = new ArrayList<String>() {{
-			add("Money");
-			add("Car+gas");
-		}};
-		
-		menuName = "McDonalds Burger & Fries";
-		complexityValue = 1;
-		
-		menuList.add(new MenuItem(menuName, foodList, complexityValue));
-		
-		foodList.clear();		
-		
-		
-		foodName = "Pot Roast";
-		category = "American";
-		healthValue = 4;
-		prepTime = 180;
-		recipe = new ArrayList<String>() {{
+		String foodName = "Pot Roast";
+		String category = "American";
+		int healthValue = 4;
+		int prepTime = 180;
+		ArrayList<String> recipe = new ArrayList<String>() {{
 			add("Preheat the oven to 275 degrees F.");
 			add("Generously salt and pepper the chuck roast.");
 			add("Heat the olive oil in large pot or Dutch oven over medium-high heat. Add the halved onions to the pot, browning them on both sides. Remove the onions to a plate.");
@@ -113,7 +38,7 @@ public class DayMenuTest {
 			add("Add in the onions and the carrots, along with the fresh herbs.");
 			add("Put the lid on, then roast for 3 hours for a 3-pound roast. For a 4 to 5-pound roast, plan on 4 hours. The roast is ready when it's fall-apart tender.");
 		}};
-		ingredients = new ArrayList<String>() {{
+		ArrayList <String> ingredients = new ArrayList<String>() {{
 			add("Potatoes");
 			add("Carrots");
 			add("Black Pepper");
@@ -166,35 +91,45 @@ public class DayMenuTest {
 		}} ;
 		
 		foodList.add(new FoodItem(foodName, category, healthValue, 
-				prepTime, recipe, ingredients));		
+				prepTime, recipe, ingredients));
 		
-				
-		menuName = "Pot Roast Dinner with Salad and Ice Cream";
-		complexityValue = 6; 
+
 		
-		menuList.add(new MenuItem(menuName, foodList, complexityValue));
+		String menuName = "Pot Roast Dinner with Salad and Ice Cream";
+		int complexityValue = 2;
 		
-		Calendar date = Calendar.getInstance();
-		date.set(2021, 10, 29);
-		
-		dayMenu = new DayMenu(date, menuList);
+		menuItem = new MenuItem(menuName, foodList, complexityValue);
 	}
-	
+
 	@Test
-	public void testValidate() { 
+	public void testValidate() {
 		
-		assertTrue ("menuItem1 validates",dayMenu.validate());
-			System.out.println(TestClass + ".testValidate PASSED");
+		assertTrue ("menuItem1 validates",menuItem.validate());
+    		System.out.println(TestClass + ".testValidate PASSED");
 	}
 	
 	// Comment @Test Line to Avoid Running This Test
-	//@Test
-	public void testDayMenuToString() {
+	@Test
+	public void testMenuItemGenerateShoppingList() {
 		System.out.println("####################TestMethod: " + 
 				Thread.currentThread().getStackTrace()[1].getMethodName() + 
 				" Begin####################");
 		
-		System.out.println(dayMenu.toString());
+		System.out.println(menuItem.generateShoppingList());
+		
+		System.out.println("####################TestMethod: " + 
+				Thread.currentThread().getStackTrace()[1].getMethodName() + 
+				" End######################");
+	}
+	
+	// Comment @Test Line to Avoid Running This Test
+	@Test
+	public void testMenuItemToString() {
+		System.out.println("####################TestMethod: " + 
+				Thread.currentThread().getStackTrace()[1].getMethodName() + 
+				" Begin####################");
+		
+		System.out.println(menuItem.toString());
 		
 		System.out.println("####################TestMethod: " + 
 				Thread.currentThread().getStackTrace()[1].getMethodName() + 
@@ -202,13 +137,13 @@ public class DayMenuTest {
 	}
 
 	// Comment @Test Line to Avoid Running This Test
-	//@Test
-	public void testDayMenuToSummaryString() {
+	@Test
+	public void testMenuItemToSummaryString() {
 		System.out.println("####################TestMethod: " + 
 				Thread.currentThread().getStackTrace()[1].getMethodName() + 
 				" Begin####################");
 		
-		System.out.println(dayMenu.toSummaryString());
+		System.out.println(menuItem.toSummaryString());
 		
 		System.out.println("####################TestMethod: " + 
 				Thread.currentThread().getStackTrace()[1].getMethodName() + 

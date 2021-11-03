@@ -109,7 +109,7 @@ public class MenuItemTest {
 	}
 	
 	// Comment @Test Line to Avoid Running This Test
-	@Test
+	//@Test
 	public void testMenuItemGenerateShoppingList() {
 		System.out.println("####################TestMethod: " + 
 				Thread.currentThread().getStackTrace()[1].getMethodName() + 
@@ -123,7 +123,7 @@ public class MenuItemTest {
 	}
 	
 	// Comment @Test Line to Avoid Running This Test
-	@Test
+	//@Test
 	public void testMenuItemToString() {
 		System.out.println("####################TestMethod: " + 
 				Thread.currentThread().getStackTrace()[1].getMethodName() + 
@@ -137,7 +137,7 @@ public class MenuItemTest {
 	}
 
 	// Comment @Test Line to Avoid Running This Test
-	@Test
+	//@Test
 	public void testMenuItemToSummaryString() {
 		System.out.println("####################TestMethod: " + 
 				Thread.currentThread().getStackTrace()[1].getMethodName() + 
