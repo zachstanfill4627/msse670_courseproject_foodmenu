@@ -8,4 +8,7 @@ public interface IUserService extends IService {
 	public final String NAME = "IUserService";
 	
 	public boolean createUserData(User user);
+	public boolean updateUserData(User user);
+	public boolean deleteUserData(User user);
+	public boolean authenticateUserData(User user);
 }
