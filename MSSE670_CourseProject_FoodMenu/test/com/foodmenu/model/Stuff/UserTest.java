@@ -1,11 +1,13 @@
 /**
  * 
  */
-package com.foodmenu.model.domain;
+package com.foodmenu.model.Stuff;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
+import com.foodmenu.model.domain.User;
 
 /**
  * @author zach

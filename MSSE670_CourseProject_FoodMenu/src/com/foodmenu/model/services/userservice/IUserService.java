@@ -11,4 +11,5 @@ public interface IUserService extends IService {
 	public boolean updateUserData(User user);
 	public boolean deleteUserData(User user);
 	public boolean authenticateUserData(User user);
+	
 }

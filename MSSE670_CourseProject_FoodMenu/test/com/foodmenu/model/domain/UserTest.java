@@ -30,7 +30,7 @@ public class UserTest {
 		User user1 = new User(firstName, lastName, emailAddress, password, 
 				recoveryPhrase, age, role);
 		
-		assertTrue ("user1 validates",user1.validate());
+		assertTrue ("user1 validates", user1.validate());
 			System.out.println(TestClass + ".testValidate PASSED");
 		
 	}
