@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.3.3 on Wed Nov 3 21:55:19 2021
+-- File generated with SQLiteStudio v3.3.3 on Thu Nov 4 20:39:14 2021
 --
 -- Text encoding used: System
 --
@@ -110,9 +110,9 @@ INSERT INTO roles (roleid, rolename) VALUES (2, 'user');
 
 -- Table: users
 DROP TABLE IF EXISTS users;
-CREATE TABLE users (userid INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, firstname TEXT NOT NULL, lastname TEXT NOT NULL, email TEXT NOT NULL, recoveryphrase TEXT NOT NULL, age INTEGER NOT NULL, role INTEGER REFERENCES roles (roleid) NOT NULL);
-INSERT INTO users (userid, firstname, lastname, email, recoveryphrase, age, role) VALUES (1, 'zach', 'stanfill', 'zstanfill@regis.edu', 'pineapple', 29, 1);
-INSERT INTO users (userid, firstname, lastname, email, recoveryphrase, age, role) VALUES (2, 'kasey', 'stanfill', 'kcstanfill@notareal.email', 'dog', 28, 2);
+CREATE TABLE users (userid INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, firstname TEXT NOT NULL, lastname TEXT NOT NULL, email TEXT NOT NULL UNIQUE ON CONFLICT FAIL, recoveryphrase TEXT NOT NULL, age INTEGER NOT NULL, role INTEGER REFERENCES roles (roleid) NOT NULL, infoid INTEGER REFERENCES info (infoid));
+INSERT INTO users (userid, firstname, lastname, email, recoveryphrase, age, role, infoid) VALUES (1, 'zach', 'stanfill', 'zstanfill@regis.edu', 'pineapple', 29, 1, 1);
+INSERT INTO users (userid, firstname, lastname, email, recoveryphrase, age, role, infoid) VALUES (2, 'kasey', 'stanfill', 'kcstanfill@notareal.email', 'dog', 28, 2, 2);
 
 COMMIT TRANSACTION;
 PRAGMA foreign_keys = on;
