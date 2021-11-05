@@ -3,11 +3,11 @@ package com.foodmenu.model.services.userservice;
 import java.sql.*;
 import com.foodmenu.model.domain.User;
 
-public class UserServiceImpl implements IUserService {
+public class UserSvcImpl implements IUserService {
 
 	private String connString = "jdbc:sqlite:data/FoodMenu.db";
 	
-	public UserServiceImpl() {
+	public UserSvcImpl() {
 		
 	}
 
@@ -79,7 +79,7 @@ public class UserServiceImpl implements IUserService {
 		return true;
 	}
 	
-	public boolean retrieveData(User user) {
+	public boolean retrieveUserData() {
 		return false;
 	}
 	
@@ -93,8 +93,6 @@ public class UserServiceImpl implements IUserService {
 	
 	public boolean authenticateUserData (User user) {
 		return false;
-	}
-	
-	
+	}	
 
 }

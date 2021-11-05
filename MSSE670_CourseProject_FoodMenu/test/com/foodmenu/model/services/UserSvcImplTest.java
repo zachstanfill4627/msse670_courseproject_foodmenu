@@ -7,13 +7,13 @@ import org.junit.Test;
 import com.foodmenu.model.domain.User;
 import com.foodmenu.model.services.userservice.*;
 
-public class UserServicesImpl {
+public class UserSvcImplTest {
 
 	private final String TestClass = "UserService";
 	
 	@Test
 	public void testUserCreate() {
-		UserServiceImpl impl = new UserServiceImpl();
+		UserSvcImpl impl = new UserSvcImpl();
 		
 		String fName = "Gwendolyn";
 		String lName = "Stanfill";
