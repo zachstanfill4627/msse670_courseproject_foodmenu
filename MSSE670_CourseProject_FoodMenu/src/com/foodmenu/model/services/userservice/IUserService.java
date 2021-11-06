@@ -8,9 +8,9 @@ public interface IUserService extends IService {
 	public final String NAME = "IUserService";
 	
 	public boolean createUserData(User user);
-	public boolean retrieveUserData();
+	public User retrieveUserData(String email);
 	public boolean updateUserData(User user);
 	public boolean deleteUserData(User user);
-	public boolean authenticateUserData(User user);
+	public boolean authenticateUserData(String email, String password);
 	
 }
