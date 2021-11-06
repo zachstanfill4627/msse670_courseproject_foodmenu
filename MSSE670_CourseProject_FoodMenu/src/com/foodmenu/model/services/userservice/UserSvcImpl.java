@@ -36,8 +36,8 @@ public class UserSvcImpl implements IUserService {
 				+ "email, recoveryphrase, age, role, infoid) "
 				+ "VALUES (\"%s\", \"%s\",\"%s\", \"%s\", %d, %s, %s);",
 				fName, lName, email, recPhr, age, 
-				"(select roleid from roles where rolename == \"" + role + "\")", 
-				"(select last_insert_rowid() from info limit 1)"));
+				"(SELECT roleid FROM roles WHERE rolename == \"" + role + "\")", 
+				"(SELECT last_insert_rowid() FROM info LIMIT 1)"));
 		String sql2 = strBfr.toString();
 		strBfr.setLength(0);		
 		

@@ -75,7 +75,7 @@ INSERT INTO menuitems (menuitemid, mealname, complexityvalue, healthvalue) VALUE
 
 -- Table: recipe
 DROP TABLE IF EXISTS recipe;
-CREATE TABLE recipe (recipeid INTEGER PRIMARY KEY AUTOINCREMENT, fooditemid INTEGER REFERENCES fooditems (fooditemid), stepnum INTEGER NOT NULL, steptext TEXT NOT NULL);
+CREATE TABLE recipe (recipeid INTEGER PRIMARY KEY AUTOINCREMENT, fooditemid INTEGER REFERENCES fooditems (fooditemid), steptext TEXT NOT NULL);
 INSERT INTO recipe (recipeid, fooditemid, stepnum, steptext) VALUES (1, 1, 1, 'Pour Cereal into Bowl.');
 INSERT INTO recipe (recipeid, fooditemid, stepnum, steptext) VALUES (2, 1, 2, 'Pour Milk into Bowl.');
 INSERT INTO recipe (recipeid, fooditemid, stepnum, steptext) VALUES (3, 2, 4, 'Collect food at second window');
