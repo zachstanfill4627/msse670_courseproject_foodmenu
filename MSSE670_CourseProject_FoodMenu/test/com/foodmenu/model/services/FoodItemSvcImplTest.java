@@ -14,6 +14,13 @@ public class FoodItemSvcImplTest {
 	private final String TestClass = "FoodItemService";
 	
 	@Test
+	public void testUserCRUD() {
+		testFoodItemCreate();
+		testFoodItemRetrieve();
+		testFoodItemUpdate();
+		testFoodItemDelete();
+	}
+	
 	public void testFoodItemCreate() {
 		FoodItemSvcImpl impl = new FoodItemSvcImpl();
 		
@@ -39,8 +46,50 @@ public class FoodItemSvcImplTest {
 		FoodItem foodItem = new FoodItem(foodName, category, healthValue, 
 				prepTime, recipe, ingredients);
 		
-		assertTrue ("testUser created", impl.createFoodItemData(foodItem));
+		assertTrue ("testFoodItem created", impl.createFoodItemData(foodItem));
 		   System.out.println(TestClass + ".testFoodItemCreate PASSED");
+		
+	}
+	
+	public void testFoodItemRetrieve() {
+		FoodItemSvcImpl impl = new FoodItemSvcImpl();
+		
+		String foodName = "meatloaf";
+		
+		assertTrue ("testFoodItem created", impl.retrieveFoodItemData(foodName).validate());
+		   System.out.println(TestClass + ".testFoodItemRetrieve PASSED");
+	}
+	
+	public void testFoodItemUpdate() {
+		FoodItemSvcImpl impl = new FoodItemSvcImpl();
+		
+		String foodName = "meatloaf";
+		
+		FoodItem foodItem = impl.retrieveFoodItemData(foodName);
+		
+		int prepTime = foodItem.getPrepTime();
+		foodItem.setPrepTime(prepTime + 18);
+		
+		ArrayList<String> recipe = foodItem.getRecipe();
+		
+		recipe.add("Let Cool for 18 Minutes");
+		recipe.add("Enjoy with Family");
+		
+		foodItem.setRecipe(recipe);
+		
+		assertTrue ("testFoodItem updated", impl.updateFoodItemData(foodItem));
+		   System.out.println(TestClass + ".testFoodItemUpdate PASSED");
+	}
+	
+	public void testFoodItemDelete() {
+		FoodItemSvcImpl impl = new FoodItemSvcImpl();
+		
+		String foodName = "meatloaf";
+		
+		FoodItem foodItem = impl.retrieveFoodItemData(foodName);
+		
+		assertTrue ("testFoodItem Deleted", impl.deleteFoodItemData(foodItem));
+		   System.out.println(TestClass + ".testFoodItemDelete PASSED");
 		
 	}
 

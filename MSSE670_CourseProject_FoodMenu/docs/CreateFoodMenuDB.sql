@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.3.3 on Thu Nov 4 20:39:14 2021
+-- File generated with SQLiteStudio v3.3.3 on Sat Nov 6 16:19:50 2021
 --
 -- Text encoding used: System
 --
@@ -8,7 +8,7 @@ BEGIN TRANSACTION;
 
 -- Table: daymeallist
 DROP TABLE IF EXISTS daymeallist;
-CREATE TABLE daymeallist (daymenuid INTEGER REFERENCES daymenu (daymenuid) NOT NULL, menuitemid INTEGER REFERENCES menuitems (menuitemid) NOT NULL);
+CREATE TABLE daymeallist (daymenuid INTEGER REFERENCES daymenu (daymenuid) ON DELETE CASCADE NOT NULL, menuitemid INTEGER REFERENCES menuitems (menuitemid) ON DELETE CASCADE NOT NULL);
 INSERT INTO daymeallist (daymenuid, menuitemid) VALUES (1, 3);
 INSERT INTO daymeallist (daymenuid, menuitemid) VALUES (1, 2);
 INSERT INTO daymeallist (daymenuid, menuitemid) VALUES (1, 1);
@@ -36,7 +36,7 @@ INSERT INTO info (infoid, infotext) VALUES (2, 'otherpassword2');
 
 -- Table: ingredients
 DROP TABLE IF EXISTS ingredients;
-CREATE TABLE ingredients (ingredientid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, fooditemid INTEGER REFERENCES fooditems (fooditemid) NOT NULL, ingredient TEXT NOT NULL);
+CREATE TABLE ingredients (ingredientid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, fooditemid INTEGER REFERENCES fooditems (fooditemid) ON DELETE CASCADE NOT NULL, ingredient TEXT NOT NULL);
 INSERT INTO ingredients (ingredientid, fooditemid, ingredient) VALUES (1, 1, 'Milk');
 INSERT INTO ingredients (ingredientid, fooditemid, ingredient) VALUES (2, 1, 'Cereal');
 INSERT INTO ingredients (ingredientid, fooditemid, ingredient) VALUES (3, 2, 'Car+gas');
@@ -58,7 +58,7 @@ INSERT INTO ingredients (ingredientid, fooditemid, ingredient) VALUES (18, 6, 'H
 
 -- Table: mealfoodlist
 DROP TABLE IF EXISTS mealfoodlist;
-CREATE TABLE mealfoodlist (fooditemid INTEGER REFERENCES fooditems (fooditemid) NOT NULL, menuitemid INTEGER REFERENCES menuitems (menuitemid) NOT NULL);
+CREATE TABLE mealfoodlist (fooditemid INTEGER REFERENCES fooditems (fooditemid) ON DELETE CASCADE NOT NULL, menuitemid INTEGER REFERENCES menuitems (menuitemid) ON DELETE CASCADE NOT NULL);
 INSERT INTO mealfoodlist (fooditemid, menuitemid) VALUES (1, 1);
 INSERT INTO mealfoodlist (fooditemid, menuitemid) VALUES (3, 2);
 INSERT INTO mealfoodlist (fooditemid, menuitemid) VALUES (2, 2);
@@ -75,32 +75,32 @@ INSERT INTO menuitems (menuitemid, mealname, complexityvalue, healthvalue) VALUE
 
 -- Table: recipe
 DROP TABLE IF EXISTS recipe;
-CREATE TABLE recipe (recipeid INTEGER PRIMARY KEY AUTOINCREMENT, fooditemid INTEGER REFERENCES fooditems (fooditemid), steptext TEXT NOT NULL);
-INSERT INTO recipe (recipeid, fooditemid, stepnum, steptext) VALUES (1, 1, 1, 'Pour Cereal into Bowl.');
-INSERT INTO recipe (recipeid, fooditemid, stepnum, steptext) VALUES (2, 1, 2, 'Pour Milk into Bowl.');
-INSERT INTO recipe (recipeid, fooditemid, stepnum, steptext) VALUES (3, 2, 4, 'Collect food at second window');
-INSERT INTO recipe (recipeid, fooditemid, stepnum, steptext) VALUES (4, 2, 3, 'Pay at 1st Window');
-INSERT INTO recipe (recipeid, fooditemid, stepnum, steptext) VALUES (5, 3, 4, 'Collect food at second window');
-INSERT INTO recipe (recipeid, fooditemid, stepnum, steptext) VALUES (6, 3, 3, 'Pay at 1st Window');
-INSERT INTO recipe (recipeid, fooditemid, stepnum, steptext) VALUES (7, 3, 2, 'Order Fries');
-INSERT INTO recipe (recipeid, fooditemid, stepnum, steptext) VALUES (8, 3, 1, 'Drive to McDonalds');
-INSERT INTO recipe (recipeid, fooditemid, stepnum, steptext) VALUES (9, 2, 2, 'Order Cheeseburger');
-INSERT INTO recipe (recipeid, fooditemid, stepnum, steptext) VALUES (10, 2, 1, 'Drive to McDonalds');
-INSERT INTO recipe (recipeid, fooditemid, stepnum, steptext) VALUES (11, 4, 1, 'Preheat the oven to 275 degrees F.');
-INSERT INTO recipe (recipeid, fooditemid, stepnum, steptext) VALUES (12, 4, 2, 'Generously salt and pepper the chuck roast.');
-INSERT INTO recipe (recipeid, fooditemid, stepnum, steptext) VALUES (13, 4, 3, 'Heat the olive oil in large pot or Dutch oven over medium-high heat. Add the halved onions to the pot, browning them on both sides. Remove the onions to a plate.');
-INSERT INTO recipe (recipeid, fooditemid, stepnum, steptext) VALUES (14, 4, 4, 'Throw the carrots into the same very hot pot and toss them around a bit until slightly browned, about a minute or so. Reserve the carrots with the onions.');
-INSERT INTO recipe (recipeid, fooditemid, stepnum, steptext) VALUES (15, 4, 5, 'If needed, add a bit more olive oil to the very hot pot. Place the meat in the pot and sear it for about a minute on all sides until it is nice and brown all over. Remove the roast to a plate.');
-INSERT INTO recipe (recipeid, fooditemid, stepnum, steptext) VALUES (16, 4, 6, 'With the burner still on high, use either red wine or beef broth (about 1 cup) to deglaze the pot, scraping the bottom with a whisk. Place the roast back into the pot and add enough beef stock to cover the meat halfway.');
-INSERT INTO recipe (recipeid, fooditemid, stepnum, steptext) VALUES (17, 4, 7, 'Add in the onions and the carrots, along with the fresh herbs.');
-INSERT INTO recipe (recipeid, fooditemid, stepnum, steptext) VALUES (18, 4, 8, 'Put the lid on, then roast for 3 hours for a 3-pound roast. For a 4 to 5-pound roast, plan on 4 hours. The roast is ready when it''s fall-apart tender.');
-INSERT INTO recipe (recipeid, fooditemid, stepnum, steptext) VALUES (19, 5, 1, 'Wash Vegitables with water.');
-INSERT INTO recipe (recipeid, fooditemid, stepnum, steptext) VALUES (20, 5, 2, 'Air dry / Spin dry Vegitables.');
-INSERT INTO recipe (recipeid, fooditemid, stepnum, steptext) VALUES (21, 5, 3, 'Cut Tomatoes and Onions. Shave Carrots into large bowl.');
-INSERT INTO recipe (recipeid, fooditemid, stepnum, steptext) VALUES (22, 5, 4, 'Mix all vegitables in a large bowl.');
-INSERT INTO recipe (recipeid, fooditemid, stepnum, steptext) VALUES (23, 5, 5, 'Add Salad Dressing.');
-INSERT INTO recipe (recipeid, fooditemid, stepnum, steptext) VALUES (24, 6, 1, 'Scoop Ice Cream into individual bowl.');
-INSERT INTO recipe (recipeid, fooditemid, stepnum, steptext) VALUES (25, 6, 2, 'Add Hot Fudge.');
+CREATE TABLE recipe (recipeid INTEGER PRIMARY KEY AUTOINCREMENT, fooditemid INTEGER REFERENCES fooditems (fooditemid) ON DELETE CASCADE, steptext TEXT NOT NULL);
+INSERT INTO recipe (recipeid, fooditemid, steptext) VALUES (1, 1, 'Pour Cereal into Bowl.');
+INSERT INTO recipe (recipeid, fooditemid, steptext) VALUES (2, 1, 'Pour Milk into Bowl.');
+INSERT INTO recipe (recipeid, fooditemid, steptext) VALUES (3, 2, 'Collect food at second window');
+INSERT INTO recipe (recipeid, fooditemid, steptext) VALUES (4, 2, 'Pay at 1st Window');
+INSERT INTO recipe (recipeid, fooditemid, steptext) VALUES (5, 3, 'Collect food at second window');
+INSERT INTO recipe (recipeid, fooditemid, steptext) VALUES (6, 3, 'Pay at 1st Window');
+INSERT INTO recipe (recipeid, fooditemid, steptext) VALUES (7, 3, 'Order Fries');
+INSERT INTO recipe (recipeid, fooditemid, steptext) VALUES (8, 3, 'Drive to McDonalds');
+INSERT INTO recipe (recipeid, fooditemid, steptext) VALUES (9, 2, 'Order Cheeseburger');
+INSERT INTO recipe (recipeid, fooditemid, steptext) VALUES (10, 2, 'Drive to McDonalds');
+INSERT INTO recipe (recipeid, fooditemid, steptext) VALUES (11, 4, 'Preheat the oven to 275 degrees F.');
+INSERT INTO recipe (recipeid, fooditemid, steptext) VALUES (12, 4, 'Generously salt and pepper the chuck roast.');
+INSERT INTO recipe (recipeid, fooditemid, steptext) VALUES (13, 4, 'Heat the olive oil in large pot or Dutch oven over medium-high heat. Add the halved onions to the pot, browning them on both sides. Remove the onions to a plate.');
+INSERT INTO recipe (recipeid, fooditemid, steptext) VALUES (14, 4, 'Throw the carrots into the same very hot pot and toss them around a bit until slightly browned, about a minute or so. Reserve the carrots with the onions.');
+INSERT INTO recipe (recipeid, fooditemid, steptext) VALUES (15, 4, 'If needed, add a bit more olive oil to the very hot pot. Place the meat in the pot and sear it for about a minute on all sides until it is nice and brown all over. Remove the roast to a plate.');
+INSERT INTO recipe (recipeid, fooditemid, steptext) VALUES (16, 4, 'With the burner still on high, use either red wine or beef broth (about 1 cup) to deglaze the pot, scraping the bottom with a whisk. Place the roast back into the pot and add enough beef stock to cover the meat halfway.');
+INSERT INTO recipe (recipeid, fooditemid, steptext) VALUES (17, 4, 'Add in the onions and the carrots, along with the fresh herbs.');
+INSERT INTO recipe (recipeid, fooditemid, steptext) VALUES (18, 4, 'Put the lid on, then roast for 3 hours for a 3-pound roast. For a 4 to 5-pound roast, plan on 4 hours. The roast is ready when it''s fall-apart tender.');
+INSERT INTO recipe (recipeid, fooditemid, steptext) VALUES (19, 5, 'Wash Vegitables with water.');
+INSERT INTO recipe (recipeid, fooditemid, steptext) VALUES (20, 5, 'Air dry / Spin dry Vegitables.');
+INSERT INTO recipe (recipeid, fooditemid, steptext) VALUES (21, 5, 'Cut Tomatoes and Onions. Shave Carrots into large bowl.');
+INSERT INTO recipe (recipeid, fooditemid, steptext) VALUES (22, 5, 'Mix all vegitables in a large bowl.');
+INSERT INTO recipe (recipeid, fooditemid, steptext) VALUES (23, 5, 'Add Salad Dressing.');
+INSERT INTO recipe (recipeid, fooditemid, steptext) VALUES (24, 6, 'Scoop Ice Cream into individual bowl.');
+INSERT INTO recipe (recipeid, fooditemid, steptext) VALUES (25, 6, 'Add Hot Fudge.');
 
 -- Table: roles
 DROP TABLE IF EXISTS roles;

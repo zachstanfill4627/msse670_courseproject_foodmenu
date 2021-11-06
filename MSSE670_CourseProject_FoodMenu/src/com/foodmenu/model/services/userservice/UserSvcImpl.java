@@ -125,8 +125,7 @@ public class UserSvcImpl implements IUserService {
 	            role = rs.getString("rolename"); 
 	            pass = rs.getString("infotext");
             } else {
-            	User user = new User();
-            	return user;
+            	return null;
             }
                         
     		/** Close Database Connection */
@@ -134,11 +133,7 @@ public class UserSvcImpl implements IUserService {
         } catch (SQLException e) {
         	/** Error Output */
         	System.err.println(e.getMessage());
-        
-        	/** Create Default User (Blank) Object */
-        	User user = new User();
-        
-        	return user;
+        	return null;
         }
 		
 		/** Create User Object */
@@ -239,6 +234,14 @@ public class UserSvcImpl implements IUserService {
 		String sql2 = strBfr.toString();
 		strBfr.setLength(0);
 		
+		/** Database Cleanup 
+		 * BUG -- SQLite Database Table Configured to ON DELETE CASCADE, however 
+		 * cascade is not properly working, therefore manual DELETE Statements
+		 * complete database cleanup tasks
+		 */
+		String sql3 = "DELETE FROM info WHERE userid NOT IN (SELECT "
+				+ "DISTINCT userid FROM userid);";
+		
 		/** SQL Statement 3, Query database - Check User Data */
 		strBfr.append(String.format("SELECT email, infotext FROM users INNER "
 				+ "JOIN info ON users.infoid == info.infoid WHERE email LIKE "
@@ -254,6 +257,7 @@ public class UserSvcImpl implements IUserService {
 			/** Execute SQL Statements - Batch Style */
 			stmt.addBatch(sql1);
             stmt.addBatch(sql2);
+            stmt.addBatch(sql3);
             stmt.executeBatch();
             
             /** Commit Changes */ 
@@ -291,11 +295,19 @@ public class UserSvcImpl implements IUserService {
 		String sql1 = strBfr.toString();
 		strBfr.setLength(0);
 		
-		/** SQL Statement 1, Update User data in Users Table */
+		/** SQL Statement 2, Update User data in Users Table */
 		strBfr.append(String.format("SELECT * FROM users where email like \"%s\"", 
 				email));
 		String query = strBfr.toString();
 		strBfr.setLength(0);
+		
+		/** Database Cleanup 
+		 * BUG -- SQLite Database Table Configured to ON DELETE CASCADE, however 
+		 * cascade is not properly working, therefore manual DELETE Statements
+		 * complete database cleanup tasks
+		 */ 
+		String sql2 = "DELETE FROM info WHERE userid NOT IN (SELECT "
+				+ "DISTINCT userid FROM userid);";
 		
 		/** Connect to Database & Execute SQL Statements & Check Accuracy */
 		try (Connection conn = DriverManager.getConnection(connString);
@@ -304,6 +316,7 @@ public class UserSvcImpl implements IUserService {
             
 			/** Execute SQL Statements - Batch Style */
 			stmt.addBatch(sql1);
+			stmt.addBatch(sql2);
             stmt.executeBatch();
             
             /** Commit Changes */ 
