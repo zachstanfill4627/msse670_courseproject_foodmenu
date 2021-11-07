@@ -229,8 +229,8 @@ public class UserSvcImpl implements IUserService {
 		
 		/** SQL Statement 2, Update User data in Users Table */
 		strBfr.append(String.format("UPDATE users SET infoid = "
-				+ "(SELECT last_insert_rowid() from info limit 1)"
-				+ "WHERE email LIKE \"%s\"", email));
+				+ "(SELECT last_insert_rowid() FROM info LIMIT 1)"
+				+ "WHERE email LIKE \"%s\";", email));
 		String sql2 = strBfr.toString();
 		strBfr.setLength(0);
 		
@@ -239,8 +239,8 @@ public class UserSvcImpl implements IUserService {
 		 * cascade is not properly working, therefore manual DELETE Statements
 		 * complete database cleanup tasks
 		 */
-		String sql3 = "DELETE FROM info WHERE userid NOT IN (SELECT "
-				+ "DISTINCT userid FROM userid);";
+		String sql3 = "DELETE FROM info WHERE infoid NOT IN (SELECT "
+				+ "DISTINCT infoid FROM users);";
 		
 		/** SQL Statement 3, Query database - Check User Data */
 		strBfr.append(String.format("SELECT email, infotext FROM users INNER "
@@ -257,7 +257,7 @@ public class UserSvcImpl implements IUserService {
 			/** Execute SQL Statements - Batch Style */
 			stmt.addBatch(sql1);
             stmt.addBatch(sql2);
-            stmt.addBatch(sql3);
+//            stmt.addBatch(sql3);
             stmt.executeBatch();
             
             /** Commit Changes */ 
@@ -290,13 +290,13 @@ public class UserSvcImpl implements IUserService {
 		StringBuffer strBfr = new StringBuffer();
 					
 		/** SQL Statement 1, Delete User data in Users Table */
-		strBfr.append(String.format("DELETE FROM users where email like \"%s\"", 
+		strBfr.append(String.format("DELETE FROM users where email like \"%s\";", 
 				email));
 		String sql1 = strBfr.toString();
 		strBfr.setLength(0);
 		
 		/** SQL Statement 2, Update User data in Users Table */
-		strBfr.append(String.format("SELECT * FROM users where email like \"%s\"", 
+		strBfr.append(String.format("SELECT * FROM users where email like \"%s\";", 
 				email));
 		String query = strBfr.toString();
 		strBfr.setLength(0);
@@ -306,8 +306,8 @@ public class UserSvcImpl implements IUserService {
 		 * cascade is not properly working, therefore manual DELETE Statements
 		 * complete database cleanup tasks
 		 */ 
-		String sql2 = "DELETE FROM info WHERE userid NOT IN (SELECT "
-				+ "DISTINCT userid FROM userid);";
+		String sql2 = "DELETE FROM info WHERE infoid NOT IN (SELECT "
+				+ "DISTINCT infoid FROM users);";
 		
 		/** Connect to Database & Execute SQL Statements & Check Accuracy */
 		try (Connection conn = DriverManager.getConnection(connString);

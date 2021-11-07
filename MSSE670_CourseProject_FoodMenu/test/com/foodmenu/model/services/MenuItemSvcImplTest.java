@@ -86,7 +86,7 @@ public class MenuItemSvcImplTest {
 	}
 	
 	@Test
-	public void testUserCRUD() {
+	public void testMenuCRUD() {
 		testMenuItemCreate();
 		testMenuItemRetrieve();
 		testMenuItemUpdate();
@@ -162,7 +162,4 @@ public class MenuItemSvcImplTest {
 	public void cleanup() {
 		foodList.forEach(food -> foodImpl.deleteFoodItemData(food));
 	}
-	
-	
-
 }

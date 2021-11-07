@@ -14,7 +14,7 @@ public class FoodItemSvcImplTest {
 	private final String TestClass = "FoodItemService";
 	
 	@Test
-	public void testUserCRUD() {
+	public void testFoodCRUD() {
 		testFoodItemCreate();
 		testFoodItemRetrieve();
 		testFoodItemUpdate();

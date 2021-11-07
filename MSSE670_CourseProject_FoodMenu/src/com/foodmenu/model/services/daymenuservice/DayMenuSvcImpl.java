@@ -1,4 +1,4 @@
-package com.foodmenu.model.services.menuitemservice;
+package com.foodmenu.model.services.daymenuservice;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,44 +6,51 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Calendar;
 
-import com.foodmenu.model.domain.FoodItem;
+import com.foodmenu.model.domain.DayMenu;
 import com.foodmenu.model.domain.MenuItem;
 import com.foodmenu.model.services.fooditemservice.FoodItemSvcImpl;
+import com.foodmenu.model.services.menuitemservice.MenuItemSvcImpl;
 
-public class MenuItemSvcImpl implements IMenuItemService {
+public class DayMenuSvcImpl implements IDayMenuService {
 	
 	private String connString = "jdbc:sqlite:data/FoodMenu.db";
 
-	public MenuItemSvcImpl()  {
+	public DayMenuSvcImpl() {
 	}
 
-	public boolean createMenuItemData(MenuItem menuItem) {
+	public boolean createDayMenuData(DayMenu dayMenu) {
 		
 		/** Localize Variables */
-		String mealName = menuItem.getMealName();
-		ArrayList<FoodItem> foodList = menuItem.getFoodList();
-		int complexValue = menuItem.getComplexityValue();
-		double healthValue = menuItem.getHealthValue();
+		Calendar date = dayMenu.getDate();
+		ArrayList<MenuItem> menuList = dayMenu.getMenuList();
+		int complexValue = dayMenu.getComplexityValue();
+		double healthValue = dayMenu.getHealthValue();
+		
+		/** Date Formatter */
+		String dateString = String.format("%d-%d-%d", 
+				date.get(Calendar.YEAR), date.get(Calendar.MONTH), 
+				date.get(Calendar.DATE));
 		
 		/** Re-usable String Buffer for SQL Statement instantiation */ 
 		StringBuffer strBfr = new StringBuffer();
 		
-		/** SQL Statement 1, Insert MenuItem Record into MenuItems Table */
-		strBfr.append(String.format("INSERT INTO menuitems (mealname, "
+		/** SQL Statement 1, Insert DayMenu Record into DayMenu Table */
+		strBfr.append(String.format("INSERT INTO daymenu (date, "
 				+ "complexityvalue, healthvalue) VALUES (\"%s\", %d, %.2f);", 
-				mealName, complexValue, healthValue));
+				dateString, complexValue, healthValue));
 		String sql1 = strBfr.toString();
 		strBfr.setLength(0);
 		
 		/** SQL Statement 2, Insert FoodList Items into MealFoodList Table */
-		ArrayList<String> foodListInsert = new ArrayList<String>();  
-		foodList.forEach(item -> {
-			strBfr.append(String.format("INSERT INTO mealfoodlist "
-					+ "(menuitemid, fooditemid) VALUES (%s, %s",
-					"(SELECT menuitemid FROM menuitems WHERE mealname LIKE \"" + mealName + "\")",
-					"(SELECT fooditemid FROM fooditems WHERE foodname LIKE \"" + item.getFoodName() + "\"));"));
-			foodListInsert.add(strBfr.toString());
+		ArrayList<String> menuListInsert = new ArrayList<String>();  
+		menuList.forEach(item -> {
+			strBfr.append(String.format("INSERT INTO daymeallist "
+					+ "(daymenuid, menuitemid) VALUES (%s, %s",
+					"(SELECT daymenuid FROM daymenu WHERE date == \"" + dateString + "\")",
+					"(SELECT menuitemid FROM menuitems WHERE mealname LIKE \"" + item.getMealName() + "\"));"));
+			menuListInsert.add(strBfr.toString());
 			strBfr.setLength(0);
 		});
 		
@@ -54,7 +61,7 @@ public class MenuItemSvcImpl implements IMenuItemService {
             
 			/** Execute SQL Insert Statements - Batch Style */
 			stmt.addBatch(sql1);
-            foodListInsert.forEach(item -> {
+            menuListInsert.forEach(item -> {
 					try {
 						stmt.addBatch(item);
 					} catch (SQLException e) {
@@ -74,22 +81,27 @@ public class MenuItemSvcImpl implements IMenuItemService {
         }
 		
 		/** If Successful, Return True */
-		return true; 
+		return true;
 	}
 
-	public MenuItem retrieveMenuItemData(String mealName) {
+	public DayMenu retrieveDayMenuData(Calendar date) {
 		/** Localize Variables */
-		int menuItemID = 0;
-		ArrayList<FoodItem> foodList = new ArrayList<FoodItem>();
+		int dayMenuID = 0;
+		ArrayList<MenuItem> menuList = new ArrayList<MenuItem>();
 		int complexValue = 0;
 		double healthValue = 0.0;
+		
+		/** Date Formatter */
+		String dateString = String.format("%d-%d-%d", 
+				date.get(Calendar.YEAR), date.get(Calendar.MONTH), 
+				date.get(Calendar.DATE));
 		
 		/** Re-usable String Buffer for SQL Statement instantiation */ 
 		StringBuffer strBfr = new StringBuffer();
 		
 		/** SQL Statement 1, Select Record from MenuItems Table */
-		strBfr.append(String.format("SELECT * FROM menuitems WHERE mealname like "
-				+ "\"%s\"", mealName));
+		strBfr.append(String.format("SELECT * FROM daymenu WHERE date == "
+				+ "\"%s\"", dateString));
 		String query = strBfr.toString();
 		strBfr.setLength(0);
 		
@@ -103,8 +115,7 @@ public class MenuItemSvcImpl implements IMenuItemService {
             
             if(rs.next()) {
             	/** Assign Query Return to Variables */
-            	menuItemID = rs.getInt("menuitemid");
-            	mealName = rs.getString("mealname");
+            	dayMenuID = rs.getInt("daymenuid");
             	complexValue = rs.getInt("complexityvalue");
             	healthValue = rs.getDouble("healthvalue");
             } else {
@@ -112,15 +123,15 @@ public class MenuItemSvcImpl implements IMenuItemService {
             }
             
             /** SQL Statement 2, Select Record from MealFoodList Table */
-    		strBfr.append(String.format("SELECT * FROM mealfoodlist WHERE menuitemid "
-    				+ "== %d;", menuItemID));
+    		strBfr.append(String.format("SELECT * FROM daymeallist WHERE daymenuid "
+    				+ "== %d;", dayMenuID));
     		query = strBfr.toString();
     		strBfr.setLength(0);
     		
     		rs = stmt.executeQuery(query);
-    		FoodItemSvcImpl foodImpl = new FoodItemSvcImpl();
+    		MenuItemSvcImpl menuImpl = new MenuItemSvcImpl();
     		while(rs.next()) {
-    			foodList.add(foodImpl.retrieveFoodItemData(rs.getInt("fooditemid")));
+    			menuList.add(menuImpl.retrieveMenuItemData(rs.getInt("menuitemid")));
     		}
             
 		} catch (SQLException e) {
@@ -129,69 +140,34 @@ public class MenuItemSvcImpl implements IMenuItemService {
     	        return null;
     	}
 		
-		MenuItem menuItem = new MenuItem (mealName, foodList, complexValue);
+		DayMenu dayMenu = new DayMenu (date, menuList);
 		
-		return menuItem;
-	}
-	
-	public MenuItem retrieveMenuItemData(int menuItemID) {
-		/** Localize Variables */
-		String mealName = "";
-		
-		/** Re-usable String Buffer for SQL Statement instantiation */ 
-		StringBuffer strBfr = new StringBuffer();
-		
-		/** SQL Statement 1, Select Record from FoodItems Table */
-		strBfr.append(String.format("SELECT * FROM menuitems WHERE menuitemid "
-				+ "== %d", menuItemID));
-		String query = strBfr.toString();
-		strBfr.setLength(0);
-		
-		/** Connect to Database & Execute SQL Statements & Check Accuracy */
-		try (Connection conn = DriverManager.getConnection(connString);
-                Statement stmt = conn.createStatement()) {
-			conn.setAutoCommit(false);
-			
-			/** Run SQL Query against FoodItems Table */
-            ResultSet rs = stmt.executeQuery(query);
-            
-            if(rs.next()) {
-            	/** Assign Query Return to Variables */
-            	mealName = rs.getString("mealname");
-            } else {
-            	return null;
-            }
-            
-		} catch (SQLException e) {
-			/** Error Output */
-	        System.err.println(e.getMessage());
-	        return null;
-	    }
-		
-		MenuItem menuItem = retrieveMenuItemData(mealName);
-				
-		/** If Successful, Return True */
-		return menuItem;
+		return dayMenu;
 	}
 
-	public boolean updateMenuItemData(MenuItem menuItem) {
-		deleteMenuItemData(menuItem);
-		if(!createMenuItemData(menuItem)) {
+	public boolean updateDayMenuData(DayMenu dayMenu) {
+		deleteDayMenuData(dayMenu);
+		if(!createDayMenuData(dayMenu)) {
 			return false;
 		}
 		
 		return true;
 	}
 
-	public boolean deleteMenuItemData(MenuItem menuItem) {
-		String mealName = menuItem.getMealName();
-	
+	public boolean deleteDayMenuData(DayMenu dayMenu) {
+		Calendar date = dayMenu.getDate();
+		
+		/** Date Formatter */
+		String dateString = String.format("%d-%d-%d", 
+				date.get(Calendar.YEAR), date.get(Calendar.MONTH), 
+				date.get(Calendar.DATE));
+		
 		/** Re-usable String Buffer for SQL Statement instantiation */ 
 		StringBuffer strBfr = new StringBuffer();
 		
 		/** SQL Statement 1, Delete Record from MenuItems Table */
-		strBfr.append(String.format("DELETE FROM menuitems WHERE mealname like "
-				+ "\"%s\";", mealName));
+		strBfr.append(String.format("DELETE FROM dayMenu WHERE date == "
+				+ "\"%s\";", dateString));
 		String sql1 = strBfr.toString();
 		strBfr.setLength(0);
 		
@@ -200,12 +176,12 @@ public class MenuItemSvcImpl implements IMenuItemService {
 		 * cascade is not properly working, therefore manual DELETE Statements
 		 * complete database cleanup tasks 
 		 */
-		String sql2 = "DELETE FROM mealfoodlist WHERE menuitemid NOT IN (SELECT "
-				+ "DISTINCT menuitemid FROM menuitems);";
+		String sql2 = "DELETE FROM daymeallist WHERE daymenuid NOT IN (SELECT "
+				+ "DISTINCT daymenuid FROM daymenu);";
 
 		/** SQL Statement 3, Select Record from MealItems Table */
-		strBfr.append(String.format("SELECT * FROM menuitems WHERE mealname like "
-				+ "\"%s\";", mealName));
+		strBfr.append(String.format("SELECT * FROM daymenu WHERE date == "
+				+ "\"%s\";", dateString));
 		String query = strBfr.toString();
 		strBfr.setLength(0);
 		
