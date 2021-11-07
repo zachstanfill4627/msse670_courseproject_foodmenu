@@ -104,6 +104,7 @@ public class DayMenu implements Serializable {
 	 * @param healthValue the healthValue to set
 	 */
 	public void setHealthValue() {
+		this.healthValue = 0.0;
 		menuList.forEach(item -> this.healthValue+=item.getHealthValue());
 		this.healthValue = this.healthValue / menuList.size();
 	}

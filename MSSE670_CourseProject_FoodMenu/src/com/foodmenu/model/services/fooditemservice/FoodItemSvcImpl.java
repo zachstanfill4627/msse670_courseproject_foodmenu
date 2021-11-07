@@ -137,7 +137,7 @@ public class FoodItemSvcImpl implements IFoodItemService {
             	return null;
             }
             
-            /** SQL Statement 2, Select Record from Users Table */
+            /** SQL Statement 2, Select Record from Recipe Table */
     		strBfr.append(String.format("SELECT * FROM recipe WHERE fooditemid "
     				+ "== %d ORDER BY recipeid;", foodItemID));
     		query = strBfr.toString();
@@ -148,7 +148,7 @@ public class FoodItemSvcImpl implements IFoodItemService {
     			recipe.add(rs.getString("steptext"));
     		}
     		
-    		/** SQL Statement 3, Select Record from Users Table */
+    		/** SQL Statement 3, Select Record from Ingredients Table */
     		strBfr.append(String.format("SELECT * FROM ingredients WHERE fooditemid "
     				+ "== %d;", foodItemID));
     		query = strBfr.toString();
@@ -169,6 +169,46 @@ public class FoodItemSvcImpl implements IFoodItemService {
 		FoodItem foodItem = new FoodItem(foodName, category, healthValue, prepTime,
 				recipe, ingredients);
 		
+		/** If Successful, Return True */
+		return foodItem;
+	}
+	
+	public FoodItem retrieveFoodItemData(int foodItemID) {
+		/** Localize Variables */
+		String foodName = "";
+
+		/** Re-usable String Buffer for SQL Statement instantiation */ 
+		StringBuffer strBfr = new StringBuffer();
+		
+		/** SQL Statement 1, Select Record from FoodItems Table */
+		strBfr.append(String.format("SELECT * FROM fooditems WHERE fooditemid "
+				+ "== %d", foodItemID));
+		String query = strBfr.toString();
+		strBfr.setLength(0);
+		
+		/** Connect to Database & Execute SQL Statements & Check Accuracy */
+		try (Connection conn = DriverManager.getConnection(connString);
+                Statement stmt = conn.createStatement()) {
+			conn.setAutoCommit(false);
+			
+			/** Run SQL Query against FoodItems Table */
+            ResultSet rs = stmt.executeQuery(query);
+            
+            if(rs.next()) {
+            	/** Assign Query Return to Variables */
+            	foodName = rs.getString("foodname");
+            } else {
+            	return null;
+            }
+            
+		} catch (SQLException e) {
+			/** Error Output */
+	        System.err.println(e.getMessage());
+	        return null;
+	    }
+		
+		FoodItem foodItem = retrieveFoodItemData(foodName);
+				
 		/** If Successful, Return True */
 		return foodItem;
 	}
@@ -203,8 +243,10 @@ public class FoodItemSvcImpl implements IFoodItemService {
 				+ "DISTINCT fooditemid FROM fooditems);";
 		String sql3 = "DELETE FROM ingredients WHERE fooditemid NOT IN (SELECT "
 				+ "DISTINCT fooditemid FROM fooditems);";
-
-		/** SQL Statement 2, Select Record from FoodItems Table */
+		String sql4 = "DELETE FROM mealfoodlist WHERE fooditemid NOT IN (SELECT "
+				+ "DISTINCT fooditemid FROM fooditems);";
+		
+		/** SQL Statement 4, Select Record from FoodItems Table */
 		strBfr.append(String.format("SELECT * FROM fooditems WHERE foodname like "
 				+ "\"%s\";", foodName));
 		String query = strBfr.toString();
@@ -219,6 +261,7 @@ public class FoodItemSvcImpl implements IFoodItemService {
 			stmt.addBatch(sql1);
 			stmt.addBatch(sql2);
 			stmt.addBatch(sql3);
+			stmt.addBatch(sql4);
             stmt.executeBatch();
             
             /** Commit Changes */ 
@@ -228,9 +271,7 @@ public class FoodItemSvcImpl implements IFoodItemService {
             ResultSet rs = stmt.executeQuery(query);
             
             if(rs.next()) { return false; };
-            
-            
-            
+
             /** Close Database Connection */
             conn.close();
 		} catch (SQLException e) {
@@ -242,5 +283,4 @@ public class FoodItemSvcImpl implements IFoodItemService {
 		/** If Successful, Return True */
 		return true;
 	}
-
 }

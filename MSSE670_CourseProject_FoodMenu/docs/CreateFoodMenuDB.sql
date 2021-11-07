@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.3.3 on Sat Nov 6 16:19:50 2021
+-- File generated with SQLiteStudio v3.3.3 on Sat Nov 6 18:13:21 2021
 --
 -- Text encoding used: System
 --
@@ -20,7 +20,7 @@ INSERT INTO daymenu (daymenuid, date, complexityvalue, healthvalue) VALUES (1, '
 
 -- Table: fooditems
 DROP TABLE IF EXISTS fooditems;
-CREATE TABLE fooditems (fooditemid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, foodname TEXT NOT NULL, category TEXT NOT NULL, healthvalue INTEGER NOT NULL, preptime INTEGER NOT NULL);
+CREATE TABLE fooditems (fooditemid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, foodname TEXT NOT NULL UNIQUE, category TEXT NOT NULL, healthvalue INTEGER NOT NULL, preptime INTEGER NOT NULL);
 INSERT INTO fooditems (fooditemid, foodname, category, healthvalue, preptime) VALUES (1, 'Cherrios Cereal', 'Other', 3, 5);
 INSERT INTO fooditems (fooditemid, foodname, category, healthvalue, preptime) VALUES (2, 'McDonalds Cheeseburger', 'American', 1, 0);
 INSERT INTO fooditems (fooditemid, foodname, category, healthvalue, preptime) VALUES (3, 'McDonalds Fries', 'American', 1, 0);

@@ -108,8 +108,9 @@ public class MenuItem implements Serializable {
 	 * Generate healthValue to set
 	 */
 	public void setHealthValue() {
-		foodList.forEach(item -> this.healthValue+=item.getHealthValue());
-		this.healthValue = this.healthValue / foodList.size();
+		this.healthValue = 0.0;
+		foodList.forEach(item -> this.healthValue += item.getHealthValue());
+		this.healthValue = healthValue / foodList.size();
 	}
 	
 	/**

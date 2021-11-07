@@ -8,6 +8,7 @@ public interface IFoodItemService {
 	
 	public boolean createFoodItemData(FoodItem foodItem);
 	public FoodItem retrieveFoodItemData(String foodName);
+	public FoodItem retrieveFoodItemData(int foodItemID);
 	public boolean updateFoodItemData(FoodItem foodItem);
 	public boolean deleteFoodItemData(FoodItem foodItem);
 

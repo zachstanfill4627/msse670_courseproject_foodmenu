@@ -188,7 +188,7 @@ public class DayMenuTest {
 	}
 	
 	// Comment @Test Line to Avoid Running This Test
-	@Test
+	//@Test
 	public void testDayMenuToString() {
 		System.out.println("####################TestMethod: " + 
 				Thread.currentThread().getStackTrace()[1].getMethodName() + 
@@ -202,7 +202,7 @@ public class DayMenuTest {
 	}
 
 	// Comment @Test Line to Avoid Running This Test
-	@Test
+	//@Test
 	public void testDayMenuToSummaryString() {
 		System.out.println("####################TestMethod: " + 
 				Thread.currentThread().getStackTrace()[1].getMethodName() + 
