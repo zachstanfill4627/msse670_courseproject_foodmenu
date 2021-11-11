@@ -2,6 +2,9 @@ package com.foodmenu.model.services;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import org.junit.After;
@@ -88,7 +91,6 @@ public class MenuItemSvcImplTest {
 			try {
 				foodImpl.createFoodItemData(foodItem);
 			} catch (FoodItemServiceException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		});
@@ -114,6 +116,17 @@ public class MenuItemSvcImplTest {
 		int complexityValue = 4;
 		
 		MenuItem menuItem = new MenuItem(mealName, foodList, complexityValue);
+		
+		/**
+		//Serialize sender/receiver data into new Envelope1.obj		
+		try {
+			ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("data/testObjectFiles/menuItem_BaconEggsToast.obj"));
+			os.writeObject(menuItem);
+			os.close();
+		} catch (IOException ex) {
+		  ex.printStackTrace();
+		}
+		*/
 
 		assertTrue ("testMealItem created", menuImpl.createMenuItemData(menuItem));
 		   System.out.println(TestClass + ".testMealItemCreate PASSED");

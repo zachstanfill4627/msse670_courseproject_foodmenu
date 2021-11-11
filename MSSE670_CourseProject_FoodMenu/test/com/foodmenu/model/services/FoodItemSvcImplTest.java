@@ -2,6 +2,9 @@ package com.foodmenu.model.services;
 
 import static org.junit.Assert.*;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import org.junit.Test;
@@ -46,6 +49,17 @@ public class FoodItemSvcImplTest {
 		
 		FoodItem foodItem = new FoodItem(foodName, category, healthValue, 
 				prepTime, recipe, ingredients);
+		
+		/**
+		//Serialize sender/receiver data into new foodItem_Meatloaf.obj		
+		try {
+			ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("data/testObjectFiles/foodItem_Meatloaf.obj"));
+			os.writeObject(foodItem);
+			os.close();
+		} catch (IOException ex) {
+		  ex.printStackTrace();
+		} 
+		*/
 		
 		assertTrue ("testFoodItem created", impl.createFoodItemData(foodItem));
 		   System.out.println(TestClass + ".testFoodItemCreate PASSED");

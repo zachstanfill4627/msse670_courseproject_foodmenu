@@ -2,6 +2,9 @@ package com.foodmenu.model.services;
 
 import static org.junit.Assert.*;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -237,6 +240,17 @@ public class DayMenuSvcImplTest {
 		date.set(2021, 11, 06);
 		
 		dayMenu = new DayMenu(date, menuList);
+		
+		/**
+		//Serialize sender/receiver data into new Envelope1.obj		
+		try {
+			ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("data/testObjectFiles/dayMenu_20211106.obj"));
+			os.writeObject(dayMenu);
+			os.close();
+		} catch (IOException ex) {
+		  ex.printStackTrace();
+		}
+		*/
 		
 	}
 	

@@ -2,6 +2,10 @@ package com.foodmenu.model.services;
 
 import static org.junit.Assert.*;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+
 import org.junit.Test;
 import org.junit.runner.OrderWith;
 
@@ -36,6 +40,17 @@ public class UserSvcImplTest {
 		String pass = "Unicorns";
 		
 		User testUser = new User(fName, lName, email, pass, recPhr, age, role);
+
+		/**
+		//Serialize User data into new user_testUser.obj		
+		try {
+			ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("data/testObjectFiles/user_testUser.obj"));
+			os.writeObject(testUser);
+			os.close();
+		} catch (IOException ex) {
+		  ex.printStackTrace();
+		}
+		*/  
 		
 		assertTrue ("testUser created", impl.createUserData(testUser));
 		   System.out.println(TestClass + ".testUserCreate PASSED");
