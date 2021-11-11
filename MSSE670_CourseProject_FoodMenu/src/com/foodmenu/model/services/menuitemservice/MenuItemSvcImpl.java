@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 import com.foodmenu.model.domain.FoodItem;
 import com.foodmenu.model.domain.MenuItem;
+import com.foodmenu.model.services.exceptions.FoodItemServiceException;
+import com.foodmenu.model.services.exceptions.MenuItemServiceException;
 import com.foodmenu.model.services.fooditemservice.FoodItemSvcImpl;
 
 public class MenuItemSvcImpl implements IMenuItemService {
@@ -18,7 +20,7 @@ public class MenuItemSvcImpl implements IMenuItemService {
 	public MenuItemSvcImpl()  {
 	}
 
-	public boolean createMenuItemData(MenuItem menuItem) {
+	public boolean createMenuItemData(MenuItem menuItem) throws MenuItemServiceException {
 		
 		/** Localize Variables */
 		String mealName = menuItem.getMealName();
@@ -77,7 +79,7 @@ public class MenuItemSvcImpl implements IMenuItemService {
 		return true; 
 	}
 
-	public MenuItem retrieveMenuItemData(String mealName) {
+	public MenuItem retrieveMenuItemData(String mealName) throws MenuItemServiceException, FoodItemServiceException {
 		/** Localize Variables */
 		int menuItemID = 0;
 		ArrayList<FoodItem> foodList = new ArrayList<FoodItem>();
@@ -134,7 +136,7 @@ public class MenuItemSvcImpl implements IMenuItemService {
 		return menuItem;
 	}
 	
-	public MenuItem retrieveMenuItemData(int menuItemID) {
+	public MenuItem retrieveMenuItemData(int menuItemID) throws MenuItemServiceException, FoodItemServiceException {
 		/** Localize Variables */
 		String mealName = "";
 		
@@ -174,7 +176,7 @@ public class MenuItemSvcImpl implements IMenuItemService {
 		return menuItem;
 	}
 
-	public boolean updateMenuItemData(MenuItem menuItem) {
+	public boolean updateMenuItemData(MenuItem menuItem) throws MenuItemServiceException {
 		deleteMenuItemData(menuItem);
 		if(!createMenuItemData(menuItem)) {
 			return false;
@@ -183,7 +185,7 @@ public class MenuItemSvcImpl implements IMenuItemService {
 		return true;
 	}
 
-	public boolean deleteMenuItemData(MenuItem menuItem) {
+	public boolean deleteMenuItemData(MenuItem menuItem) throws MenuItemServiceException {
 		String mealName = menuItem.getMealName();
 	
 		/** Re-usable String Buffer for SQL Statement instantiation */ 

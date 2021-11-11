@@ -10,6 +10,7 @@ import java.util.Calendar;
 
 import com.foodmenu.model.domain.DayMenu;
 import com.foodmenu.model.domain.MenuItem;
+import com.foodmenu.model.services.exceptions.DayMenuServiceException;
 import com.foodmenu.model.services.fooditemservice.FoodItemSvcImpl;
 import com.foodmenu.model.services.menuitemservice.MenuItemSvcImpl;
 
@@ -20,7 +21,7 @@ public class DayMenuSvcImpl implements IDayMenuService {
 	public DayMenuSvcImpl() {
 	}
 
-	public boolean createDayMenuData(DayMenu dayMenu) {
+	public boolean createDayMenuData(DayMenu dayMenu) throws DayMenuServiceException {
 		
 		/** Localize Variables */
 		Calendar date = dayMenu.getDate();
@@ -84,7 +85,7 @@ public class DayMenuSvcImpl implements IDayMenuService {
 		return true;
 	}
 
-	public DayMenu retrieveDayMenuData(Calendar date) {
+	public DayMenu retrieveDayMenuData(Calendar date) throws DayMenuServiceException {
 		/** Localize Variables */
 		int dayMenuID = 0;
 		ArrayList<MenuItem> menuList = new ArrayList<MenuItem>();
@@ -145,7 +146,7 @@ public class DayMenuSvcImpl implements IDayMenuService {
 		return dayMenu;
 	}
 
-	public boolean updateDayMenuData(DayMenu dayMenu) {
+	public boolean updateDayMenuData(DayMenu dayMenu) throws DayMenuServiceException {
 		deleteDayMenuData(dayMenu);
 		if(!createDayMenuData(dayMenu)) {
 			return false;
@@ -154,7 +155,7 @@ public class DayMenuSvcImpl implements IDayMenuService {
 		return true;
 	}
 
-	public boolean deleteDayMenuData(DayMenu dayMenu) {
+	public boolean deleteDayMenuData(DayMenu dayMenu) throws DayMenuServiceException {
 		Calendar date = dayMenu.getDate();
 		
 		/** Date Formatter */

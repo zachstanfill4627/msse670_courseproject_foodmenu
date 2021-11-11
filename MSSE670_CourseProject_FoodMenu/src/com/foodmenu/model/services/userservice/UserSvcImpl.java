@@ -2,6 +2,7 @@ package com.foodmenu.model.services.userservice;
 
 import java.sql.*;
 import com.foodmenu.model.domain.User;
+import com.foodmenu.model.services.exceptions.UserServiceException;
 
 public class UserSvcImpl implements IUserService {
 
@@ -11,7 +12,7 @@ public class UserSvcImpl implements IUserService {
 		
 	}
 
-	public boolean createUserData(User user) {
+	public boolean createUserData(User user) throws UserServiceException {
 		
 		/** Localize Variables */
 		String fName = user.getFirstName();
@@ -88,7 +89,7 @@ public class UserSvcImpl implements IUserService {
 		return true;
 	}
 	
-	public User retrieveUserData(String email) {
+	public User retrieveUserData(String email) throws UserServiceException {
 		
 		/** Localize Variables */
 		String fName = "";
@@ -143,7 +144,7 @@ public class UserSvcImpl implements IUserService {
 		return user;
 	}
 	
-	public boolean updateUserData (User user) {
+	public boolean updateUserData (User user) throws UserServiceException {
 		
 		/** Localize Variables */
 		String fName = user.getFirstName();
@@ -213,7 +214,7 @@ public class UserSvcImpl implements IUserService {
 		return true;
 	}
 	
-	public boolean updateUserPasswordData (User user) {
+	public boolean updateUserPasswordData (User user) throws UserServiceException {
 		/** Localize Variables */
 		String email = user.getEmailAddress();
 		String pass = user.getPassword();
@@ -282,7 +283,7 @@ public class UserSvcImpl implements IUserService {
 		return true;
 	}
 	
-	public boolean deleteUserData (User user) {
+	public boolean deleteUserData (User user) throws UserServiceException {
 		/** Localize Variables */
 		String email = user.getEmailAddress();
 		
@@ -339,7 +340,7 @@ public class UserSvcImpl implements IUserService {
 		return true;
 	}
 	
-	public boolean authenticateUserData (String email, String password) {
+	public boolean authenticateUserData (String email, String password) throws UserServiceException {
 		/** Re-usable String Buffer for SQL Statement instantiation */ 
 		StringBuffer strBfr = new StringBuffer();
 		

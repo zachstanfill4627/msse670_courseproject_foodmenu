@@ -9,6 +9,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.foodmenu.model.domain.*;
+import com.foodmenu.model.services.exceptions.FoodItemServiceException;
+import com.foodmenu.model.services.exceptions.MenuItemServiceException;
 import com.foodmenu.model.services.fooditemservice.FoodItemSvcImpl;
 import com.foodmenu.model.services.menuitemservice.MenuItemSvcImpl;
 
@@ -82,18 +84,25 @@ public class MenuItemSvcImplTest {
 		recipe.clear();
 		ingredients.clear();
 		
-		foodList.forEach(foodItem -> foodImpl.createFoodItemData(foodItem));
+		foodList.forEach(foodItem -> {
+			try {
+				foodImpl.createFoodItemData(foodItem);
+			} catch (FoodItemServiceException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
 	}
 	
 	@Test
-	public void testMenuCRUD() {
+	public void testMenuCRUD() throws FoodItemServiceException, MenuItemServiceException {
 		testMenuItemCreate();
 		testMenuItemRetrieve();
 		testMenuItemUpdate();
 		testMenuItemDelete();
 	}
 	
-	public void testMenuItemCreate() {
+	public void testMenuItemCreate() throws FoodItemServiceException, MenuItemServiceException {
 		MenuItemSvcImpl menuImpl = new MenuItemSvcImpl();
 	
 		String mealName = "Bacon, Eggs, and Toast";
@@ -110,7 +119,7 @@ public class MenuItemSvcImplTest {
 		   System.out.println(TestClass + ".testMealItemCreate PASSED");
 	}
 	
-	public void testMenuItemRetrieve() {
+	public void testMenuItemRetrieve() throws MenuItemServiceException, FoodItemServiceException {
 		MenuItemSvcImpl menuImpl = new MenuItemSvcImpl();
 		
 		String mealName = "Bacon, Eggs, and Toast";
@@ -120,7 +129,7 @@ public class MenuItemSvcImplTest {
 	}
 	
 	
-	public void testMenuItemUpdate() {
+	public void testMenuItemUpdate() throws MenuItemServiceException, FoodItemServiceException {
 		MenuItemSvcImpl menuImpl = new MenuItemSvcImpl();
 		
 		String mealName = "Bacon, Eggs, and Toast";
@@ -141,7 +150,7 @@ public class MenuItemSvcImplTest {
 		   System.out.println(TestClass + ".testMealItemUpdate PASSED");	
 	}
 	
-	public void testMenuItemDelete() {
+	public void testMenuItemDelete() throws FoodItemServiceException, MenuItemServiceException {
 		MenuItemSvcImpl menuImpl = new MenuItemSvcImpl();
 		
 		String mealName = "Bacon, Eggs, and Toast";
@@ -160,6 +169,12 @@ public class MenuItemSvcImplTest {
 	
 	@After
 	public void cleanup() {
-		foodList.forEach(food -> foodImpl.deleteFoodItemData(food));
+		foodList.forEach(food -> {
+			try {
+				foodImpl.deleteFoodItemData(food);
+			} catch (FoodItemServiceException e) {
+				e.printStackTrace();
+			}
+		});
 	}
 }

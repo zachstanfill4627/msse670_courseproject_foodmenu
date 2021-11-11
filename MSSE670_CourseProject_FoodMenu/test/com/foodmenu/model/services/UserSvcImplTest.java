@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.OrderWith;
 
 import com.foodmenu.model.domain.User;
+import com.foodmenu.model.services.exceptions.UserServiceException;
 import com.foodmenu.model.services.userservice.*;
 
 public class UserSvcImplTest {
@@ -13,7 +14,7 @@ public class UserSvcImplTest {
 	private final String TestClass = "UserService";
 	
 	@Test
-	public void testUserCRUD() {
+	public void testUserCRUD() throws UserServiceException {
 		testUserCreate();
 		testUserRetrieve();
 		testUserUpdate();
@@ -23,7 +24,7 @@ public class UserSvcImplTest {
 	}
 	
 	
-	public void testUserCreate() {
+	public void testUserCreate() throws UserServiceException {
 		UserSvcImpl impl = new UserSvcImpl();
 		
 		String fName = "Gwendolyn";
@@ -42,7 +43,7 @@ public class UserSvcImplTest {
 	}
 	
 	 
-	public void testUserRetrieve() {
+	public void testUserRetrieve() throws UserServiceException {
 		UserSvcImpl impl = new UserSvcImpl();
 		
 		String email = "gwendolyn@gmail.com";
@@ -53,7 +54,7 @@ public class UserSvcImplTest {
 	}
 	
 	
-	public void testUserUpdate() {
+	public void testUserUpdate() throws UserServiceException {
 		UserSvcImpl impl = new UserSvcImpl();
 		
 		String email = "gwendolyn@gmail.com";
@@ -69,7 +70,7 @@ public class UserSvcImplTest {
 	}
 
 
-	public void testUserPassUpdate() {
+	public void testUserPassUpdate() throws UserServiceException {
 		UserSvcImpl impl = new UserSvcImpl();
 		
 		String email = "gwendolyn@gmail.com";
@@ -83,7 +84,7 @@ public class UserSvcImplTest {
 	}
 	
 
-	public void testUserDelete() {
+	public void testUserDelete() throws UserServiceException {
 		UserSvcImpl impl = new UserSvcImpl();
 		
 		String email = "gwendolyn@gmail.com";
@@ -95,7 +96,7 @@ public class UserSvcImplTest {
 	}
 	
 
-	public void testUserAuthenticate() {
+	public void testUserAuthenticate() throws UserServiceException {
 		UserSvcImpl impl = new UserSvcImpl();
 		
 		String email = "gwendolyn@gmail.com";

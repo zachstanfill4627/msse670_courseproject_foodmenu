@@ -13,6 +13,9 @@ import com.foodmenu.model.domain.DayMenu;
 import com.foodmenu.model.domain.FoodItem;
 import com.foodmenu.model.domain.MenuItem;
 import com.foodmenu.model.services.daymenuservice.DayMenuSvcImpl;
+import com.foodmenu.model.services.exceptions.DayMenuServiceException;
+import com.foodmenu.model.services.exceptions.FoodItemServiceException;
+import com.foodmenu.model.services.exceptions.MenuItemServiceException;
 import com.foodmenu.model.services.fooditemservice.FoodItemSvcImpl;
 import com.foodmenu.model.services.menuitemservice.MenuItemSvcImpl;
 
@@ -95,7 +98,11 @@ public class DayMenuSvcImplTest {
 		ingredients.clear();
 		
 		foodList.forEach(foodItem -> {
-			foodImpl.createFoodItemData(foodItem);
+			try {
+				foodImpl.createFoodItemData(foodItem);
+			} catch (FoodItemServiceException e) {
+				e.printStackTrace();
+			}
 			masterFoodList.add(foodItem);
 		});
 		
@@ -128,7 +135,11 @@ public class DayMenuSvcImplTest {
 		ingredients.clear();
 		
 		foodList.forEach(foodItem -> {
-			foodImpl.createFoodItemData(foodItem);
+			try {
+				foodImpl.createFoodItemData(foodItem);
+			} catch (FoodItemServiceException e) {
+				e.printStackTrace();
+			}
 			masterFoodList.add(foodItem);
 		});
 		
@@ -198,7 +209,11 @@ public class DayMenuSvcImplTest {
 		ingredients.clear();
 		
 		foodList.forEach(foodItem -> {
-			foodImpl.createFoodItemData(foodItem);
+			try {
+				foodImpl.createFoodItemData(foodItem);
+			} catch (FoodItemServiceException e) {
+				e.printStackTrace();
+			}
 			masterFoodList.add(foodItem);
 		});
 		
@@ -210,7 +225,11 @@ public class DayMenuSvcImplTest {
 		foodList.clear();
 		
 		menuList.forEach(menuItem -> {
-			menuImpl.createMenuItemData(menuItem);
+			try {
+				menuImpl.createMenuItemData(menuItem);
+			} catch (MenuItemServiceException e) {
+				e.printStackTrace();
+			}
 			masterMenuList.add(menuItem);
 		}); 
 
@@ -222,21 +241,21 @@ public class DayMenuSvcImplTest {
 	}
 	
 	@Test
-	public void testDayMenuCrud() {
+	public void testDayMenuCrud() throws DayMenuServiceException, MenuItemServiceException, FoodItemServiceException {
 		testDayMenuCreate();
 		testDayMenuRetrieve();
 		testDayMenuUpdate();
 		testDayMenuDelete();
 	}
 	
-	public void testDayMenuCreate() {
+	public void testDayMenuCreate() throws DayMenuServiceException {
 		DayMenuSvcImpl dayMenuImpl = new DayMenuSvcImpl();
 		
 		assertTrue ("dayMenu Created", dayMenuImpl.createDayMenuData(dayMenu));
 			System.out.println(TestClass + ".testDayMenuCreate PASSED");
 	}
 	
-	public void testDayMenuRetrieve() {
+	public void testDayMenuRetrieve() throws DayMenuServiceException {
 		DayMenuSvcImpl dayMenuImpl = new DayMenuSvcImpl();
 		
 		Calendar date = Calendar.getInstance();
@@ -246,7 +265,7 @@ public class DayMenuSvcImplTest {
 			System.out.println(TestClass + ".testDayMenuRetrieve PASSED");	
 	}
 	
-	public void testDayMenuUpdate() {
+	public void testDayMenuUpdate() throws DayMenuServiceException, MenuItemServiceException, FoodItemServiceException {
 		DayMenuSvcImpl dayMenuImpl = new DayMenuSvcImpl();
 		
 		Calendar date = Calendar.getInstance();
@@ -266,7 +285,7 @@ public class DayMenuSvcImplTest {
 		   System.out.println(TestClass + ".testDayMenuUpdate PASSED");
 	}
 	
-	public void testDayMenuDelete() {
+	public void testDayMenuDelete() throws DayMenuServiceException {
 		DayMenuSvcImpl dayMenuImpl = new DayMenuSvcImpl();
 
 		assertTrue ("dayMenu Deleted", dayMenuImpl.deleteDayMenuData(dayMenu));
@@ -275,7 +294,20 @@ public class DayMenuSvcImplTest {
 	
 	@After
 	public void cleanup() {
-		masterMenuList.forEach(menu -> menuImpl.deleteMenuItemData(menu));
-		masterFoodList.forEach(food -> foodImpl.deleteFoodItemData(food));
+		masterMenuList.forEach(menu -> {
+			try {
+				menuImpl.deleteMenuItemData(menu);
+			} catch (MenuItemServiceException e) {
+
+				e.printStackTrace();
+			}
+		});
+		masterFoodList.forEach(food -> {
+			try {
+				foodImpl.deleteFoodItemData(food);
+			} catch (FoodItemServiceException e) {
+				e.printStackTrace();
+			}
+		});
 	}
 }

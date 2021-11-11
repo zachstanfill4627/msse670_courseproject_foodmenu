@@ -1,13 +1,15 @@
 package com.foodmenu.model.services.menuitemservice;
 
 import com.foodmenu.model.domain.MenuItem;
+import com.foodmenu.model.services.exceptions.FoodItemServiceException;
+import com.foodmenu.model.services.exceptions.MenuItemServiceException;
 
 public interface IMenuItemService {
 	
-	public boolean createMenuItemData(MenuItem menuItem);
-	public MenuItem retrieveMenuItemData(String mealName);
-	public MenuItem retrieveMenuItemData(int menuItemID);
-	public boolean updateMenuItemData(MenuItem menuItem);
-	public boolean deleteMenuItemData(MenuItem menuItem);
+	public boolean createMenuItemData(MenuItem menuItem) throws MenuItemServiceException;
+	public MenuItem retrieveMenuItemData(String mealName) throws MenuItemServiceException, FoodItemServiceException;
+	public MenuItem retrieveMenuItemData(int menuItemID) throws MenuItemServiceException, FoodItemServiceException;
+	public boolean updateMenuItemData(MenuItem menuItem) throws MenuItemServiceException;
+	public boolean deleteMenuItemData(MenuItem menuItem) throws MenuItemServiceException;
 
 }

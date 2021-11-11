@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 import com.foodmenu.model.domain.FoodItem;
+import com.foodmenu.model.services.exceptions.FoodItemServiceException;
 import com.foodmenu.model.services.fooditemservice.FoodItemSvcImpl;
 
 public class FoodItemSvcImplTest {
@@ -14,14 +15,14 @@ public class FoodItemSvcImplTest {
 	private final String TestClass = "FoodItemService";
 	
 	@Test
-	public void testFoodCRUD() {
+	public void testFoodCRUD() throws FoodItemServiceException {
 		testFoodItemCreate();
 		testFoodItemRetrieve();
 		testFoodItemUpdate();
 		testFoodItemDelete();
 	}
 	
-	public void testFoodItemCreate() {
+	public void testFoodItemCreate() throws FoodItemServiceException {
 		FoodItemSvcImpl impl = new FoodItemSvcImpl();
 		
 		String foodName = "meatloaf";
@@ -51,7 +52,7 @@ public class FoodItemSvcImplTest {
 		
 	}
 	
-	public void testFoodItemRetrieve() {
+	public void testFoodItemRetrieve() throws FoodItemServiceException {
 		FoodItemSvcImpl impl = new FoodItemSvcImpl();
 		
 		String foodName = "meatloaf";
@@ -60,7 +61,7 @@ public class FoodItemSvcImplTest {
 		   System.out.println(TestClass + ".testFoodItemRetrieve PASSED");
 	}
 	
-	public void testFoodItemUpdate() {
+	public void testFoodItemUpdate() throws FoodItemServiceException {
 		FoodItemSvcImpl impl = new FoodItemSvcImpl();
 		
 		String foodName = "meatloaf";
@@ -81,7 +82,7 @@ public class FoodItemSvcImplTest {
 		   System.out.println(TestClass + ".testFoodItemUpdate PASSED");
 	}
 	
-	public void testFoodItemDelete() {
+	public void testFoodItemDelete() throws FoodItemServiceException {
 		FoodItemSvcImpl impl = new FoodItemSvcImpl();
 		
 		String foodName = "meatloaf";

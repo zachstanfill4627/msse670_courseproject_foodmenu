@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import com.foodmenu.model.domain.FoodItem;
+import com.foodmenu.model.services.exceptions.DayMenuServiceException;
+import com.foodmenu.model.services.exceptions.FoodItemServiceException;
 
 public class FoodItemSvcImpl implements IFoodItemService {
 	
@@ -16,7 +18,7 @@ public class FoodItemSvcImpl implements IFoodItemService {
 	public FoodItemSvcImpl() {		
 	}
 
-	public boolean createFoodItemData(FoodItem foodItem) {
+	public boolean createFoodItemData(FoodItem foodItem) throws FoodItemServiceException {
 		
 		/** Localize Variables */
 		String foodName = foodItem.getFoodName();
@@ -99,7 +101,7 @@ public class FoodItemSvcImpl implements IFoodItemService {
 				
 	}
 
-	public FoodItem retrieveFoodItemData(String foodName) {
+	public FoodItem retrieveFoodItemData(String foodName) throws FoodItemServiceException {
 		
 		/** Localize Variables */
 		int foodItemID = 0;
@@ -173,7 +175,7 @@ public class FoodItemSvcImpl implements IFoodItemService {
 		return foodItem;
 	}
 	
-	public FoodItem retrieveFoodItemData(int foodItemID) {
+	public FoodItem retrieveFoodItemData(int foodItemID) throws FoodItemServiceException {
 		/** Localize Variables */
 		String foodName = "";
 
@@ -213,7 +215,7 @@ public class FoodItemSvcImpl implements IFoodItemService {
 		return foodItem;
 	}
 
-	public boolean updateFoodItemData(FoodItem foodItem) {
+	public boolean updateFoodItemData(FoodItem foodItem) throws FoodItemServiceException {
 		deleteFoodItemData(foodItem);
 		if(!createFoodItemData(foodItem)) {
 			return false;
@@ -222,7 +224,7 @@ public class FoodItemSvcImpl implements IFoodItemService {
 		return true;
 	}
 
-	public boolean deleteFoodItemData(FoodItem foodItem) {
+	public boolean deleteFoodItemData(FoodItem foodItem) throws FoodItemServiceException {
 		String foodName = foodItem.getFoodName();
 		
 		/** Re-usable String Buffer for SQL Statement instantiation */ 
