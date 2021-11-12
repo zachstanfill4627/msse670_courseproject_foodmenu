@@ -11,6 +11,8 @@ import java.util.Calendar;
 import com.foodmenu.model.domain.DayMenu;
 import com.foodmenu.model.domain.MenuItem;
 import com.foodmenu.model.services.exceptions.DayMenuServiceException;
+import com.foodmenu.model.services.exceptions.FoodItemServiceException;
+import com.foodmenu.model.services.exceptions.MenuItemServiceException;
 import com.foodmenu.model.services.fooditemservice.FoodItemSvcImpl;
 import com.foodmenu.model.services.menuitemservice.MenuItemSvcImpl;
 
@@ -85,7 +87,7 @@ public class DayMenuSvcImpl implements IDayMenuService {
 		return true;
 	}
 
-	public DayMenu retrieveDayMenuData(Calendar date) throws DayMenuServiceException {
+	public DayMenu retrieveDayMenuData(Calendar date) throws DayMenuServiceException, MenuItemServiceException, FoodItemServiceException {
 		/** Localize Variables */
 		int dayMenuID = 0;
 		ArrayList<MenuItem> menuList = new ArrayList<MenuItem>();

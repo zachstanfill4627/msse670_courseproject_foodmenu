@@ -1,9 +1,10 @@
 package com.foodmenu.model.services.fooditemservice;
 
 import com.foodmenu.model.domain.FoodItem;
+import com.foodmenu.model.services.IService;
 import com.foodmenu.model.services.exceptions.FoodItemServiceException;
 
-public interface IFoodItemService {
+public interface IFoodItemService extends IService {
 	
 	public final String NAME = "IFoodItemService";
 	

@@ -1,10 +1,11 @@
 package com.foodmenu.model.services.menuitemservice;
 
 import com.foodmenu.model.domain.MenuItem;
+import com.foodmenu.model.services.IService;
 import com.foodmenu.model.services.exceptions.FoodItemServiceException;
 import com.foodmenu.model.services.exceptions.MenuItemServiceException;
 
-public interface IMenuItemService {
+public interface IMenuItemService extends IService {
 	
 	public boolean createMenuItemData(MenuItem menuItem) throws MenuItemServiceException;
 	public MenuItem retrieveMenuItemData(String mealName) throws MenuItemServiceException, FoodItemServiceException;

@@ -269,7 +269,7 @@ public class DayMenuSvcImplTest {
 			System.out.println(TestClass + ".testDayMenuCreate PASSED");
 	}
 	
-	public void testDayMenuRetrieve() throws DayMenuServiceException {
+	public void testDayMenuRetrieve() throws DayMenuServiceException, MenuItemServiceException, FoodItemServiceException {
 		DayMenuSvcImpl dayMenuImpl = new DayMenuSvcImpl();
 		
 		Calendar date = Calendar.getInstance();

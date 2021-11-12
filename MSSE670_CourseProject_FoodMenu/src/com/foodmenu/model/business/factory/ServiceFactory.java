@@ -17,7 +17,6 @@ public class ServiceFactory {
 	 * @return 
 	 * @throws ServiceLoadException
 	 */
-	@SuppressWarnings("deprecation")
 	public IService getService(String serviceName) throws ServiceLoadException {
 		try {
 			Class<?> c = Class.forName(getImplName(serviceName));
