@@ -17,8 +17,10 @@ import com.foodmenu.model.services.exceptions.FoodItemServiceException;
 
 public class FoodItemManagerTest {
 
-	ServiceFactory serviceFactory;
-	FoodItem foodItem;
+	private final String TestClass = "FoodItemManager";
+	
+	private ServiceFactory serviceFactory;
+	private FoodItem foodItem;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -37,10 +39,27 @@ public class FoodItemManagerTest {
 	
 	@Test
 	public void testFoodItemManager() {
+		testAddFood();
+		testDeleteFood();
+	}
+	
+	public void testAddFood() {
 		FoodItemManager foodItemManager = new FoodItemManager();
 		
 		try {
-			foodItemManager.addNewFoodItem(foodItem);
+			assertTrue ("foodItemManager addNew", foodItemManager.addNewFoodItem(foodItem));
+			   System.out.println(TestClass + ".testAddFood PASSED");
+		} catch (ServiceLoadException | FoodItemServiceException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void testDeleteFood() {
+		FoodItemManager foodItemManager = new FoodItemManager();
+		
+		try {	
+			assertTrue ("foodItemManager Delete", foodItemManager.deleteFoodItem(foodItem));
+			   System.out.println(TestClass + ".testDeleteFood PASSED");
 		} catch (ServiceLoadException | FoodItemServiceException e) {
 			e.printStackTrace();
 		}

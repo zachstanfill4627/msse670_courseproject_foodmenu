@@ -31,4 +31,19 @@ public class MenuItemManager {
 		}
 	}
 
+	/** 
+	 * Use Case : MenuItem-210
+	 * Delete Existing Menu Item
+	 */
+	public boolean deleteMenuItem(MenuItem menuItem) throws ServiceLoadException, 
+		MenuItemServiceException {
+		
+		ServiceFactory serviceFactory = new ServiceFactory();
+		IMenuItemService menuItemSvc = (IMenuItemService)serviceFactory.getService("IMenuItemService");
+		if(menuItemSvc.deleteMenuItemData(menuItem)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

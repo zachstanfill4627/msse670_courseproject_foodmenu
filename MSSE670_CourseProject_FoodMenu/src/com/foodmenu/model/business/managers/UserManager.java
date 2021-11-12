@@ -17,9 +17,9 @@ public class UserManager {
 	
 	/** 
 	 * Use Case : Users-400
-	 * Add New User Item
+	 * Add New User
 	 */
-	public boolean UserManager(User user) throws ServiceLoadException, 
+	public boolean addNewUser(User user) throws ServiceLoadException, 
 		UserServiceException {
 		
 		ServiceFactory serviceFactory = new ServiceFactory();
@@ -31,4 +31,19 @@ public class UserManager {
 		}
 	}
 
+	/** 
+	 * Use Case : Users-410
+	 * Delete Existing User 
+	 */
+	public boolean deleteUser(User user) throws ServiceLoadException, 
+		UserServiceException {
+		
+		ServiceFactory serviceFactory = new ServiceFactory();
+		IUserService userSvc = (IUserService)serviceFactory.getService("IUserService");
+		if(userSvc.deleteUserData(user)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

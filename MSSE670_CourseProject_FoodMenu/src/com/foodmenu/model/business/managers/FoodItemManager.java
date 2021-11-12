@@ -30,5 +30,21 @@ public class FoodItemManager {
 			return false;
 		}
 	}
+	
+	/** 
+	 * Use Case : FoodItem-110
+	 * Delete Existing Food Item
+	 */
+	public boolean deleteFoodItem(FoodItem foodItem) throws ServiceLoadException, 
+		FoodItemServiceException {
+		
+		ServiceFactory serviceFactory = new ServiceFactory();
+		IFoodItemService foodItemSvc = (IFoodItemService)serviceFactory.getService("IFoodItemService");
+		if(foodItemSvc.deleteFoodItemData(foodItem)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 }
