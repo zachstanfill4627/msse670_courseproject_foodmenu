@@ -1,8 +1,11 @@
 package com.foodmenu.model.business.managers;
 
+import java.util.ArrayList;
+
 import com.foodmenu.model.business.exceptions.ServiceLoadException;
 import com.foodmenu.model.business.factory.ServiceFactory;
 import com.foodmenu.model.domain.MenuItem;
+import com.foodmenu.model.services.exceptions.FoodItemServiceException;
 import com.foodmenu.model.services.exceptions.MenuItemServiceException;
 import com.foodmenu.model.services.menuitemservice.IMenuItemService;
 
@@ -45,5 +48,31 @@ public class MenuItemManager {
 		} else {
 			return false;
 		}
+	}
+	
+	/** 
+	 * Use Case : MenuItem-220
+	 * Retrieve All Menu Items
+	 * @throws FoodItemServiceException 
+	 */
+	public ArrayList<MenuItem> retrieveAllMenuItem() throws ServiceLoadException, 
+		MenuItemServiceException, FoodItemServiceException {
+		
+		ServiceFactory serviceFactory = new ServiceFactory();
+		IMenuItemService menuItemSvc = (IMenuItemService)serviceFactory.getService("IMenuItemService");
+		return menuItemSvc.retrieveAllMenuItemData();
+	}
+	
+	/** 
+	 * Use Case : MenuItem-230
+	 * Retrieve Menu Item
+	 * @throws FoodItemServiceException 
+	 */
+	public MenuItem retrieveMenuItem(String mealName) throws ServiceLoadException, 
+		MenuItemServiceException, FoodItemServiceException {
+		
+		ServiceFactory serviceFactory = new ServiceFactory();
+		IMenuItemService menuItemSvc = (IMenuItemService)serviceFactory.getService("IMenuItemService");
+		return menuItemSvc.retrieveMenuItemData(mealName);
 	}
 }

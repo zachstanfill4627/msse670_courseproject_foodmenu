@@ -18,6 +18,10 @@ public class IngredientsTableModel extends AbstractTableModel {
 		this.ingredients = foodItem.getIngredients();
 	}
 	
+	public void setFoodItem(ArrayList<String> ingredients) {
+		this.ingredients = ingredients;
+	}
+	
 	public int getRowCount() {
 		return ingredients.size();
 	}

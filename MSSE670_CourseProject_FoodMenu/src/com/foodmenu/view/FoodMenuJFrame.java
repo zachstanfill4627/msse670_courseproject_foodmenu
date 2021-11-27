@@ -20,6 +20,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+
 import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
 import javax.swing.JPanel;
@@ -31,22 +33,30 @@ public class FoodMenuJFrame extends JFrame {
 	private User user = null;
 	private User selectedUser = null;
 	private FoodItem selectedFoodItem = null;
+	private MenuItem selectedMenuItem = null;
+	private DayMenu selectedDayMenu = null;
 	
 	private UsersTableModel usersModel = new UsersTableModel();
 	private FoodItemsTableModel foodItemsModel = new FoodItemsTableModel();
-	private IngredientsTableModel ingredientsModel = new IngredientsTableModel();
+	private FoodItemsTableModel foodItemsMenuItemModel = new FoodItemsTableModel();
+	private FoodItemsTableModel foodItemsDayMenuModel = new FoodItemsTableModel();
+	private IngredientsTableModel ingredientsFoodItemModel = new IngredientsTableModel();
+	private IngredientsTableModel ingredientsMenuItemModel = new IngredientsTableModel();
+	private IngredientsTableModel ingredientsDayMenuModel = new IngredientsTableModel();
+	private MenuItemsTableModel menuItemsModel = new MenuItemsTableModel();
 	private RecipeTableModel recipeModel = new RecipeTableModel();
 	
 	private int selectedRow = -1;
 	
 	private UserManager userManager = new UserManager();
 	private FoodItemManager foodItemManager = new FoodItemManager();
+	private MenuItemManager menuItemManager = new MenuItemManager();
 	
 	private JTable usersTable;
 	private JTable foodItemsTable;
 	private JTable ingredientsTable;
 	private JTable recipeTable;
-	private JTable menuItemTable;
+	private JTable menuItemsTable;
 	private JTable menuFoodItemsTable;
 	private JTable menuIngredientsTable;
 	
@@ -64,6 +74,13 @@ public class FoodMenuJFrame extends JFrame {
 		} catch (ServiceLoadException | FoodItemServiceException e) {
 			e.printStackTrace();
 		}
+        
+        try {
+			menuItemsModel.setMenuItems(menuItemManager.retrieveAllMenuItem());
+		} catch (ServiceLoadException | MenuItemServiceException | FoodItemServiceException e) {
+			e.printStackTrace();
+		}
+        
     }
 	
 	@SuppressWarnings("serial")
@@ -96,10 +113,10 @@ public class FoodMenuJFrame extends JFrame {
 	   menuItemScrollPane.setBounds(10, 5, 809, 177);
 	   panel.add(menuItemScrollPane);
 	   
-	   menuItemTable = new JTable();
-	   menuItemTable.setFont(new Font("Calibri", Font.BOLD, 12));
-	   menuItemScrollPane.setViewportView(menuItemTable);
-	   menuItemTable.setModel(new DefaultTableModel(
+	   menuItemsTable = new JTable();
+	   menuItemsTable.setFont(new Font("Calibri", Font.BOLD, 12));
+	   menuItemScrollPane.setViewportView(menuItemsTable);
+	   menuItemsTable.setModel(new DefaultTableModel(
 	   	new Object[][] {
 	   		{null, null, null},
 	   	},
@@ -112,6 +129,9 @@ public class FoodMenuJFrame extends JFrame {
 	   menuFoodItemScrollPane.setBounds(10, 193, 522, 334);
 	   panel.add(menuFoodItemScrollPane);
 	   
+	   menuItemsTable.setModel(menuItemsModel);
+	   menuItemsTable.addMouseListener(new selectMenuItemMouseClickListener());
+	   
 	   menuFoodItemsTable = new JTable();
 	   menuFoodItemsTable.setModel(new DefaultTableModel(
 	   	new Object[][] {
@@ -122,6 +142,8 @@ public class FoodMenuJFrame extends JFrame {
 	   	}
 	   ));
 	   menuFoodItemScrollPane.setViewportView(menuFoodItemsTable);
+	   
+	   menuFoodItemsTable.setModel(foodItemsMenuItemModel);
 	   
 	   JScrollPane menuIngredientsScrollPane = new JScrollPane();
 	   menuIngredientsScrollPane.setBounds(539, 193, 280, 338);
@@ -138,6 +160,9 @@ public class FoodMenuJFrame extends JFrame {
 	   ));
 	   menuIngredientsTable.setFont(new Font("Calibri", Font.BOLD, 12));
 	   menuIngredientsScrollPane.setViewportView(menuIngredientsTable);
+	   
+	   menuIngredientsTable.setModel(ingredientsMenuItemModel);
+	   
 	   tabs.addTab("Food Items", foodItems);
 	   
 	   JPanel foodItemsPanel = new JPanel();
@@ -182,7 +207,7 @@ public class FoodMenuJFrame extends JFrame {
 	   ));
 	   ingredientsScrollPane.setViewportView(ingredientsTable);
 	   
-	   ingredientsTable.setModel(ingredientsModel);
+	   ingredientsTable.setModel(ingredientsFoodItemModel);
 	   
 	   JScrollPane recipeScrollPane = new JScrollPane();
 	   recipeScrollPane.setBounds(303, 274, 516, 262);
@@ -307,13 +332,10 @@ public class FoodMenuJFrame extends JFrame {
 				e1.printStackTrace();
 			}
 		}
-
+		
 		public void mousePressed(MouseEvent e) {}
-
 		public void mouseReleased(MouseEvent e) {}
-
 		public void mouseEntered(MouseEvent e) {}
-
 		public void mouseExited(MouseEvent e) {}
 	}
 	
@@ -324,8 +346,8 @@ public class FoodMenuJFrame extends JFrame {
 
 			try {
 				selectedFoodItem = foodItemManager.retrieveFoodItem(foodName);
-				ingredientsModel.setFoodItem(selectedFoodItem);
-				ingredientsModel.fireTableDataChanged();
+				ingredientsFoodItemModel.setFoodItem(selectedFoodItem);
+				ingredientsFoodItemModel.fireTableDataChanged();
 				recipeModel.setFoodItem(selectedFoodItem);
 				recipeModel.fireTableDataChanged();
 			} catch (ServiceLoadException | FoodItemServiceException e1) {
@@ -335,11 +357,35 @@ public class FoodMenuJFrame extends JFrame {
 		}
 
 		public void mousePressed(MouseEvent e) {}
-
 		public void mouseReleased(MouseEvent e) {}
-
 		public void mouseEntered(MouseEvent e) {}
+		public void mouseExited(MouseEvent e) {}
+	}
+	
+	class selectMenuItemMouseClickListener implements MouseListener {
+		public void mouseClicked(MouseEvent e) {
+			int row = menuItemsTable.getSelectedRow();
+			String mealName = menuItemsTable.getModel().getValueAt(row, 0).toString();
+			ArrayList<String> ingredients = new ArrayList<String>();
 
+			try {
+				selectedMenuItem = menuItemManager.retrieveMenuItem(mealName);
+				foodItemsMenuItemModel.setFoodItems(selectedMenuItem.getFoodList());
+				foodItemsMenuItemModel.fireTableDataChanged();
+				menuItemManager.retrieveMenuItem(mealName).getFoodList().forEach(food -> {{
+					ingredients.addAll(food.getIngredients());
+				}});
+				ingredientsMenuItemModel.setFoodItem(ingredients);
+				ingredientsMenuItemModel.fireTableDataChanged();
+			} catch (ServiceLoadException | MenuItemServiceException | FoodItemServiceException e1) {
+				e1.printStackTrace();
+			}
+
+		}
+
+		public void mousePressed(MouseEvent e) {}
+		public void mouseReleased(MouseEvent e) {}
+		public void mouseEntered(MouseEvent e) {}
 		public void mouseExited(MouseEvent e) {}
 	}
 }

@@ -175,6 +175,35 @@ public class MenuItemSvcImpl implements IMenuItemService {
 		/** If Successful, Return True */
 		return menuItem;
 	}
+	
+	public ArrayList<MenuItem> retrieveAllMenuItemData () throws MenuItemServiceException, FoodItemServiceException {
+		ArrayList<MenuItem> menuItems = new ArrayList<MenuItem>();
+		
+		/** Re-usable String Buffer for SQL Statement instantiation */ 
+		StringBuffer strBfr = new StringBuffer();
+		
+		/** SQL Statement 1, Select Record from FoodItems Table */
+		strBfr.append(String.format("SELECT mealName FROM menuitems;"));
+		String query = strBfr.toString();
+		strBfr.setLength(0);
+		
+		try (Connection conn = DriverManager.getConnection(connString);
+                Statement stmt = conn.createStatement()) {          
+            
+            /** Run SQL Query against Users Table */
+            ResultSet rs = stmt.executeQuery(query);
+            
+            while(rs.next()) {
+            	menuItems.add(retrieveMenuItemData(rs.getString("mealname")));
+            }            
+            return menuItems;
+            
+		} catch (SQLException e) {
+        	/** Error Output */
+        	System.err.println(e.getMessage());
+        	return null;
+        }
+	}
 
 	public boolean updateMenuItemData(MenuItem menuItem) throws MenuItemServiceException {
 		deleteMenuItemData(menuItem);

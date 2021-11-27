@@ -8,8 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import com.foodmenu.model.domain.FoodItem;
-import com.foodmenu.model.domain.User;
-import com.foodmenu.model.services.exceptions.DayMenuServiceException;
 import com.foodmenu.model.services.exceptions.FoodItemServiceException;
 
 public class FoodItemSvcImpl implements IFoodItemService {
