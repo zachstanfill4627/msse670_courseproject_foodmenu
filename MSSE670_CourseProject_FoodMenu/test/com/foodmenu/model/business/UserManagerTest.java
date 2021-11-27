@@ -40,6 +40,7 @@ public class UserManagerTest {
 	@Test
 	public void testUserManager() throws UserServiceException {
 		testUserAdd();
+		testUserAuthenticate();
 		testUserDelete();
 	}
 	
@@ -64,5 +65,15 @@ public class UserManagerTest {
 			e.printStackTrace();
 		}
 	}
-
+	
+	public void testUserAuthenticate() throws UserServiceException {
+		UserManager userManager = new UserManager();
+		
+		try {
+			assertTrue ("dayMenuManager Authenticate", userManager.authenticateUser(user.getEmailAddress(), user.getPassword()));
+			   System.out.println(TestClass + ".testAuthenticateUser PASSED");
+		} catch (ServiceLoadException | UserServiceException e) {
+			e.printStackTrace();
+		}
+	}
 }

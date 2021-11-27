@@ -58,6 +58,17 @@ public class User implements Serializable {
 		this.age = age;
 		this.role = role; 
 	}
+	
+	public User (String firstName, String lastName, String emailAddress, String recoveryPhrase,
+			int age, String role) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.emailAddress = emailAddress;
+		this.recoveryPhrase = recoveryPhrase;
+		this.age = age;
+		this.role = role; 
+	}
 
 	/**
 	 * @return the firstName

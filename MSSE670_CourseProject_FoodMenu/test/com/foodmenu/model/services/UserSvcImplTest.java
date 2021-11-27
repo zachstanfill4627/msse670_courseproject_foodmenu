@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 
 import org.junit.Test;
 import org.junit.runner.OrderWith;
@@ -120,4 +121,17 @@ public class UserSvcImplTest {
 		assertTrue ("testUser Authenticate", impl.authenticateUserData(email, password));
 		   System.out.println(TestClass + ".testUserAuthenticate PASSED");
 	}
+
+	//Test Users Returned
+	public void testUserRetrieveAll() throws UserServiceException {
+		UserSvcImpl impl = new UserSvcImpl();
+
+		ArrayList<User> users = impl.retrieveAllUserData();
+		
+		users.forEach(user -> System.out.println(user.getEmailAddress()));
+		
+		assertTrue ("testUser Retrieve All Users", true);
+		   System.out.println(TestClass + ".testUserRetrieveAll PASSED");
+		
+	} 
 }

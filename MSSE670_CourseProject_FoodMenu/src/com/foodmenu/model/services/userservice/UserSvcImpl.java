@@ -1,6 +1,8 @@
 package com.foodmenu.model.services.userservice;
 
 import java.sql.*;
+import java.util.ArrayList;
+
 import com.foodmenu.model.domain.User;
 import com.foodmenu.model.services.exceptions.UserServiceException;
 
@@ -144,6 +146,39 @@ public class UserSvcImpl implements IUserService {
 		return user;
 	}
 	
+	public ArrayList<User> retrieveAllUserData() {
+		ArrayList<User> users = new ArrayList<User>();
+		
+		/** Re-usable String Buffer for SQL Statement instantiation */ 
+		StringBuffer strBfr = new StringBuffer();
+		
+		/** SQL Statement 1, Select Record from Users Table */
+		strBfr.append(String.format("SELECT firstname, lastname, email, recoveryphrase, "
+				+ "age, rolename FROM users INNER JOIN roles ON "
+				+ "users.role == roles.roleid;"));
+		String query = strBfr.toString();
+		strBfr.setLength(0);
+		
+		try (Connection conn = DriverManager.getConnection(connString);
+                Statement stmt = conn.createStatement()) {          
+            
+            /** Run SQL Query against Users Table */
+            ResultSet rs = stmt.executeQuery(query);
+            
+            while(rs.next()) {
+            	users.add(new User(rs.getString("firstname"), rs.getString("lastname"), rs.getString("email"), rs.getString("recoveryphrase"), rs.getInt("age"), rs.getString("rolename")));
+            }
+            
+            return users;
+		
+		} catch (SQLException e) {
+        	/** Error Output */
+        	System.err.println(e.getMessage());
+        	return users;
+        }
+		
+	}
+	
 	public boolean updateUserData (User user) throws UserServiceException {
 		
 		/** Localize Variables */
@@ -258,7 +293,7 @@ public class UserSvcImpl implements IUserService {
 			/** Execute SQL Statements - Batch Style */
 			stmt.addBatch(sql1);
             stmt.addBatch(sql2);
-//            stmt.addBatch(sql3);
+            stmt.addBatch(sql3);
             stmt.executeBatch();
             
             /** Commit Changes */ 
