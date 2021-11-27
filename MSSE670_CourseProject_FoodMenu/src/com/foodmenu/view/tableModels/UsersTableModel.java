@@ -1,10 +1,13 @@
-package com.foodmenu.view;
+package com.foodmenu.view.tableModels;
 
 import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 import com.foodmenu.model.domain.User;
 
 public class UsersTableModel extends AbstractTableModel {
+	
+	private static final long serialVersionUID = 1L;
+
 	private String [] columnNames = {"First Name", "Last Name", "Email", "Age",
 			"Role"};
 	

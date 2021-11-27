@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import com.foodmenu.model.domain.FoodItem;
+import com.foodmenu.model.domain.User;
 import com.foodmenu.model.services.exceptions.DayMenuServiceException;
 import com.foodmenu.model.services.exceptions.FoodItemServiceException;
 
@@ -213,6 +214,35 @@ public class FoodItemSvcImpl implements IFoodItemService {
 				
 		/** If Successful, Return True */
 		return foodItem;
+	}
+	
+	public ArrayList<FoodItem> retrieveAllFoodItemData() throws FoodItemServiceException {
+		ArrayList<FoodItem> foodItems = new ArrayList<FoodItem>();
+		
+		/** Re-usable String Buffer for SQL Statement instantiation */ 
+		StringBuffer strBfr = new StringBuffer();
+		
+		/** SQL Statement 1, Select Record from FoodItems Table */
+		strBfr.append(String.format("SELECT foodName FROM fooditems;"));
+		String query = strBfr.toString();
+		strBfr.setLength(0);
+		
+		try (Connection conn = DriverManager.getConnection(connString);
+                Statement stmt = conn.createStatement()) {          
+            
+            /** Run SQL Query against Users Table */
+            ResultSet rs = stmt.executeQuery(query);
+            
+            while(rs.next()) {
+            	foodItems.add(retrieveFoodItemData(rs.getString("FoodName")));
+            }            
+            return foodItems;
+            
+		} catch (SQLException e) {
+        	/** Error Output */
+        	System.err.println(e.getMessage());
+        	return null;
+        }
 	}
 
 	public boolean updateFoodItemData(FoodItem foodItem) throws FoodItemServiceException {

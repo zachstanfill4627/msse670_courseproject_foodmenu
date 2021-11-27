@@ -1,5 +1,7 @@
 package com.foodmenu.model.business.managers;
 
+import java.util.ArrayList;
+
 import com.foodmenu.model.business.exceptions.ServiceLoadException;
 import com.foodmenu.model.business.factory.ServiceFactory;
 import com.foodmenu.model.domain.FoodItem;
@@ -46,5 +48,29 @@ public class FoodItemManager {
 			return false;
 		}
 	}
+	
+	/** 
+	 * Use Case : FoodItem-120
+	 * Retrieve All Food Item
+	 */
+	public ArrayList<FoodItem> retrieveAllFoodItems() throws ServiceLoadException, 
+		FoodItemServiceException {
+		
+		ServiceFactory serviceFactory = new ServiceFactory();
+		IFoodItemService foodItemSvc = (IFoodItemService)serviceFactory.getService("IFoodItemService");
+		return foodItemSvc.retrieveAllFoodItemData();
+	}	
+	
+	/** 
+	 * Use Case : FoodItem-130
+	 * Retrieve Food Item
+	 */
+	public FoodItem retrieveFoodItem(String foodName) throws ServiceLoadException, 
+		FoodItemServiceException {
+		
+		ServiceFactory serviceFactory = new ServiceFactory();
+		IFoodItemService foodItemSvc = (IFoodItemService)serviceFactory.getService("IFoodItemService");
+		return foodItemSvc.retrieveFoodItemData(foodName);
+	}	
 
 }

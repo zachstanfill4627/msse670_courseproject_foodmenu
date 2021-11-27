@@ -52,7 +52,7 @@ public class LoginJFrame extends JFrame {
 		getContentPane().add(unameLabel);
 		
 		unameField = new JTextField();
-		//unameField.setText("zach.stanfill4627@gmail.com");
+		unameField.setText("zach.stanfill4627@gmail.com");
 		unameField.setFont(new Font("Calibri", Font.BOLD, 16));
 		unameField.setColumns(10);
 		unameField.setBounds(10, 121, 443, 26);

@@ -1,5 +1,7 @@
 package com.foodmenu.model.services.fooditemservice;
 
+import java.util.ArrayList;
+
 import com.foodmenu.model.domain.FoodItem;
 import com.foodmenu.model.services.IService;
 import com.foodmenu.model.services.exceptions.FoodItemServiceException;
@@ -11,6 +13,7 @@ public interface IFoodItemService extends IService {
 	public boolean createFoodItemData(FoodItem foodItem) throws FoodItemServiceException;
 	public FoodItem retrieveFoodItemData(String foodName) throws FoodItemServiceException;
 	public FoodItem retrieveFoodItemData(int foodItemID) throws FoodItemServiceException;
+	public ArrayList<FoodItem> retrieveAllFoodItemData() throws FoodItemServiceException;
 	public boolean updateFoodItemData(FoodItem foodItem) throws FoodItemServiceException;
 	public boolean deleteFoodItemData(FoodItem foodItem) throws FoodItemServiceException;
 
