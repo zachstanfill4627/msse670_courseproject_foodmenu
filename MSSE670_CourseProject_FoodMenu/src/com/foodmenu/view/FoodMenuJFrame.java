@@ -1,5 +1,6 @@
 package com.foodmenu.view;
 
+import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,10 +17,15 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -96,11 +102,10 @@ public class FoodMenuJFrame extends JFrame {
 				| FoodItemServiceException e) {
 			e.printStackTrace();
 		}
-        
     }
 	
 	@SuppressWarnings("serial")
-	public FoodMenuJFrame() {
+	public FoodMenuJFrame() throws IOException {
 		super("Food Menu");
 		setResizable(false);
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -198,6 +203,18 @@ public class FoodMenuJFrame extends JFrame {
 	   
 	   dayMenuIngredientsTable.setModel(ingredientsDayMenuModel);
 	   
+	   JButton createDayMenuButton = new JButton("Create New Day Menu");
+	   createDayMenuButton.addActionListener(new createDayMenuButtonListener());
+	   createDayMenuButton.setFont(new Font("Calibri", Font.BOLD, 14));
+	   createDayMenuButton.setBounds(621, 578, 198, 23);
+	   dayMenusPanel.add(createDayMenuButton);
+	   
+	   JButton deleteDayMenuButton = new JButton("Delete Day Menu");
+	   deleteDayMenuButton.addActionListener(new deleteDayMenuButtonListener());
+	   deleteDayMenuButton.setFont(new Font("Calibri", Font.BOLD, 14));
+	   deleteDayMenuButton.setBounds(10, 576, 164, 23);
+	   dayMenusPanel.add(deleteDayMenuButton);
+	   
 	   tabs.addTab("Menu Items", menuItems);
 	   
 	   JPanel menuItemsPanel = new JPanel();
@@ -258,6 +275,18 @@ public class FoodMenuJFrame extends JFrame {
 	   
 	   menuIngredientsTable.setModel(ingredientsMenuItemModel);
 	   
+	   JButton createMenuItemButton = new JButton("Create New Menu Item");
+	   createMenuItemButton.addActionListener(new createMenuItemButtonListener());
+	   createMenuItemButton.setFont(new Font("Calibri", Font.BOLD, 14));
+	   createMenuItemButton.setBounds(621, 578, 198, 23);
+	   menuItemsPanel.add(createMenuItemButton);
+	   
+	   JButton deleteMenuItemButton = new JButton("Delete Menu Item");
+	   deleteMenuItemButton.addActionListener(new deleteMenuItemButtonListener());
+	   deleteMenuItemButton.setFont(new Font("Calibri", Font.BOLD, 14));
+	   deleteMenuItemButton.setBounds(10, 576, 164, 23);
+	   menuItemsPanel.add(deleteMenuItemButton);
+	   
 	   tabs.addTab("Food Items", foodItems);
 	   
 	   JPanel foodItemsPanel = new JPanel();
@@ -290,6 +319,7 @@ public class FoodMenuJFrame extends JFrame {
 	   foodItemsPanel.add(ingredientsScrollPane);
 	   
 	   ingredientsTable = new JTable();
+	   ingredientsTable.setRowSelectionAllowed(false);
 	   ingredientsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 	   ingredientsTable.setFont(new Font("Calibri", Font.BOLD, 12));
 	   ingredientsTable.setModel(new DefaultTableModel(
@@ -309,6 +339,7 @@ public class FoodMenuJFrame extends JFrame {
 	   foodItemsPanel.add(recipeScrollPane);
 	   
 	   recipeTable = new JTable();
+	   recipeTable.setRowSelectionAllowed(false);
 	   recipeTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 	   recipeTable.setFont(new Font("Calibri", Font.BOLD, 12));
 	   recipeTable.setModel(new DefaultTableModel(
@@ -322,6 +353,18 @@ public class FoodMenuJFrame extends JFrame {
 	   recipeScrollPane.setViewportView(recipeTable);
 	   
 	   recipeTable.setModel(recipeModel);
+	   
+	   JButton createFoodItemButton = new JButton("Create New Food Item");
+	   createFoodItemButton.addActionListener(new createFoodItemButtonListener());
+	   createFoodItemButton.setFont(new Font("Calibri", Font.BOLD, 14));
+	   createFoodItemButton.setBounds(621, 578, 198, 23);
+	   foodItemsPanel.add(createFoodItemButton);
+	   
+	   JButton deleteFoodItemButton = new JButton("Delete Food Item");
+	   deleteFoodItemButton.addActionListener(new deleteFoodItemButtonListener());
+	   deleteFoodItemButton.setFont(new Font("Calibri", Font.BOLD, 14));
+	   deleteFoodItemButton.setBounds(10, 576, 164, 23);
+	   foodItemsPanel.add(deleteFoodItemButton);
 	   
 	   tabs.addTab("User Accounts", userAccounts);
 	   
@@ -412,9 +455,160 @@ public class FoodMenuJFrame extends JFrame {
 			} else {
 				JOptionPane.showMessageDialog(null, "User " + selectedUser.getEmailAddress() + " was not deleted!");
 			}
-			
 		}
-	}	
+	}
+	
+	class createFoodItemButtonListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			CreateFoodItemJFrame createFoodItemJFrame;
+			
+			createFoodItemJFrame = new CreateFoodItemJFrame();
+			createFoodItemJFrame.setVisible(true);
+			
+			createFoodItemJFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+				public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+					JOptionPane.showMessageDialog(null, "Refreshing Food Items Table!!");
+			        try {
+						foodItemsModel.setFoodItems(foodItemManager.retrieveAllFoodItems());
+						foodItemsModel.fireTableDataChanged();
+					} catch (ServiceLoadException | FoodItemServiceException e) {
+						e.printStackTrace();
+					}
+			        
+					String foodName = foodItemsTable.getModel().getValueAt(0, 0).toString();
+
+					try {
+						selectedFoodItem = foodItemManager.retrieveFoodItem(foodName);
+						ingredientsFoodItemModel.setFoodItem(selectedFoodItem);
+						ingredientsFoodItemModel.fireTableDataChanged();
+						recipeModel.setFoodItem(selectedFoodItem);
+						recipeModel.fireTableDataChanged();
+					} catch (ServiceLoadException | FoodItemServiceException e1) {
+						e1.printStackTrace();
+					}
+				}
+			});
+		}
+	}
+	
+	class deleteFoodItemButtonListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			int result = JOptionPane.showConfirmDialog(null, "Are you sure you would like to delete this Food Item?\n" + selectedFoodItem.getFoodName(), "Confirm Delete", JOptionPane.YES_NO_OPTION);
+			
+			if(result == JOptionPane.YES_OPTION) {
+				try {
+					if(foodItemManager.deleteFoodItem(selectedFoodItem)) {
+						JOptionPane.showMessageDialog(null, "Food Item \"" + selectedFoodItem.getFoodName() + "\" was successfully deleted!");
+						foodItemsModel.setFoodItems(foodItemManager.retrieveAllFoodItems());
+						foodItemsModel.fireTableDataChanged();
+						
+						String foodName = foodItemsTable.getModel().getValueAt(0, 0).toString();
+
+						try {
+							selectedFoodItem = foodItemManager.retrieveFoodItem(foodName);
+							ingredientsFoodItemModel.setFoodItem(selectedFoodItem);
+							ingredientsFoodItemModel.fireTableDataChanged();
+							recipeModel.setFoodItem(selectedFoodItem);
+							recipeModel.fireTableDataChanged();
+						} catch (ServiceLoadException | FoodItemServiceException e1) {
+							e1.printStackTrace();
+						}
+					} else {
+						JOptionPane.showMessageDialog(null, "System Failed to delete food item \"" + selectedFoodItem.getFoodName() + "\"");
+					}
+				} catch (ServiceLoadException | FoodItemServiceException e1) {
+					e1.printStackTrace();
+				}
+			} else {
+				JOptionPane.showMessageDialog(null, "Food Item \"" + selectedFoodItem.getFoodName() + "\" was not deleted!");
+			}
+		}
+	}
+	
+	class createMenuItemButtonListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			CreateMenuItemJFrame createMenuItemJFrame;
+			
+			createMenuItemJFrame = new CreateMenuItemJFrame();
+			createMenuItemJFrame.setVisible(true);
+			
+			createMenuItemJFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+				public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+					JOptionPane.showMessageDialog(null, "Refreshing Menu Items Table!!");
+					try {
+						menuItemsModel.setMenuItems(menuItemManager.retrieveAllMenuItems());
+						menuItemsModel.fireTableDataChanged();
+					} catch (ServiceLoadException | FoodItemServiceException | MenuItemServiceException e) {
+						e.printStackTrace();
+					}
+			        
+					String mealName = menuItemsTable.getModel().getValueAt(0, 0).toString();
+					ArrayList<String> ingredients = new ArrayList<String>();
+
+					try {
+						foodItemsMenuItemModel.setFoodItems(selectedMenuItem.getFoodList());
+						foodItemsMenuItemModel.fireTableDataChanged();
+						menuItemManager.retrieveMenuItem(mealName).getFoodList().forEach(food -> {{
+							ingredients.addAll(food.getIngredients());
+						}});
+						ingredientsMenuItemModel.setFoodItem(ingredients);
+						ingredientsMenuItemModel.fireTableDataChanged();
+					} catch (ServiceLoadException | FoodItemServiceException | MenuItemServiceException e1) {
+						e1.printStackTrace();
+					}
+				}
+			});
+		}
+	}
+	
+	class deleteMenuItemButtonListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			int result = JOptionPane.showConfirmDialog(null, "Are you sure you would like to delete this Menu Item?\n" + selectedMenuItem.getMealName(), "Confirm Delete", JOptionPane.YES_NO_OPTION);
+			
+			if(result == JOptionPane.YES_OPTION) {
+				try {
+					if(menuItemManager.deleteMenuItem(selectedMenuItem)) {
+						JOptionPane.showMessageDialog(null, "Menu Item \"" + selectedMenuItem.getMealName() + "\" was successfully deleted!");
+						menuItemsModel.setMenuItems(menuItemManager.retrieveAllMenuItems());
+						menuItemsModel.fireTableDataChanged();
+						
+						String mealName = menuItemsTable.getModel().getValueAt(0, 0).toString();
+						ArrayList<String> ingredients = new ArrayList<String>();
+
+						try {
+							foodItemsMenuItemModel.setFoodItems(selectedMenuItem.getFoodList());
+							foodItemsMenuItemModel.fireTableDataChanged();
+							menuItemManager.retrieveMenuItem(mealName).getFoodList().forEach(food -> {{
+								ingredients.addAll(food.getIngredients());
+							}});
+							ingredientsMenuItemModel.setFoodItem(ingredients);
+							ingredientsMenuItemModel.fireTableDataChanged();
+						} catch (ServiceLoadException | FoodItemServiceException | MenuItemServiceException e1) {
+							e1.printStackTrace();
+						}
+					} else {
+						JOptionPane.showMessageDialog(null, "System Failed to delete menu item \"" + selectedMenuItem.getMealName() + "\"");
+					}
+				} catch (ServiceLoadException | FoodItemServiceException | HeadlessException | MenuItemServiceException e1) {
+					e1.printStackTrace();
+				}
+			} else {
+				JOptionPane.showMessageDialog(null, "Menu Item \"" + selectedMenuItem.getMealName() + "\" was not deleted!");
+			}	
+		}
+	}
+	
+	class createDayMenuButtonListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			JOptionPane.showMessageDialog(null, "You selected to create a Day Menu...\nThis Use Case isn't quite done yet.\n\nStay Tuned!!!");
+		}
+	}
+	
+	class deleteDayMenuButtonListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			JOptionPane.showMessageDialog(null, "You selected to delete a Day Menu...\nThis Use Case isn't quite done yet.\n\nStay Tuned!!!");		
+		}
+	}
 	
 	class selectUserMouseClickListener implements MouseListener {
 		public void mouseClicked(MouseEvent e) {
@@ -448,7 +642,6 @@ public class FoodMenuJFrame extends JFrame {
 			} catch (ServiceLoadException | FoodItemServiceException e1) {
 				e1.printStackTrace();
 			}
-
 		}
 
 		public void mousePressed(MouseEvent e) {}

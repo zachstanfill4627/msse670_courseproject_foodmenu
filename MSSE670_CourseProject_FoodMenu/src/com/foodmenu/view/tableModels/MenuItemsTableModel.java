@@ -1,5 +1,6 @@
 package com.foodmenu.view.tableModels;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 
@@ -11,6 +12,8 @@ public class MenuItemsTableModel extends AbstractTableModel {
 	private String [] columnNames = {"Meal Name", "Complexity Value", "Health Value"};
 	
 	private ArrayList<MenuItem> menuItems = new ArrayList<MenuItem>();
+	
+	private final DecimalFormat df = new DecimalFormat("#.##");
 	
 	public void setMenuItems(ArrayList<MenuItem> menuItems) {
 		this.menuItems = menuItems;
@@ -30,7 +33,7 @@ public class MenuItemsTableModel extends AbstractTableModel {
 			case 0:
 				return menuItem.getMealName();
 			case 1:
-				return menuItem.getComplexityValue();
+				return df.format(menuItem.getComplexityValue());
 			case 2:
 				return menuItem.getHealthValue();
 		}

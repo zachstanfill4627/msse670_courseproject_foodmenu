@@ -4,7 +4,11 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -27,7 +31,7 @@ public class LoginJFrame extends JFrame {
 	private JTextField unameField;
 	private JPasswordField passwordField;
 	
-	public LoginJFrame() {
+	public LoginJFrame() throws IOException {
 		super("Food Menu Login");
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		setResizable(false);
@@ -84,8 +88,13 @@ public class LoginJFrame extends JFrame {
 	class createAccountButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			setVisible(false);
-			CreateAccountJFrame createAccountJFrame = new CreateAccountJFrame();
-			createAccountJFrame.setVisible(true);
+			CreateAccountJFrame createAccountJFrame;
+			try {
+				createAccountJFrame = new CreateAccountJFrame();
+				createAccountJFrame.setVisible(true);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}			
 		}
 	}
 	
@@ -109,12 +118,9 @@ public class LoginJFrame extends JFrame {
 					foodMenuJFrame.setUser(user);
 					foodMenuJFrame.setVisible(true);
 				}
-			} catch (ServiceLoadException e1) {
-				e1.printStackTrace();
-			} catch (UserServiceException e1) {
+			} catch (ServiceLoadException | UserServiceException | IOException e1) {
 				e1.printStackTrace();
 			}
-			
 		}
 	}
 	
@@ -125,6 +131,4 @@ public class LoginJFrame extends JFrame {
 			return;
 		}
 	}
-	
-	
 }

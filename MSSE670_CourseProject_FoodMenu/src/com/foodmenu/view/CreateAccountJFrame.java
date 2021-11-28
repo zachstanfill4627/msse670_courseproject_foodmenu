@@ -8,8 +8,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.SwingConstants;
 
@@ -24,7 +28,10 @@ import javax.swing.JPasswordField;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import java.awt.Color;
+
+import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JScrollBar;
 import javax.swing.JSlider;
 import javax.swing.JFormattedTextField;
@@ -42,18 +49,18 @@ public class CreateAccountJFrame extends JFrame {
 	private JSpinner ageSpinner = new JSpinner();
 	private JComboBox userLevelDropdown; 
 
-	public CreateAccountJFrame() {
+	public CreateAccountJFrame() throws IOException {
 		super("Food Menu Create Account");
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		setResizable(false);
 		setSize(479, 569);
 		getContentPane().setLayout(null);
 		
-		JLabel titleLablel = new JLabel("Create Food Menu Account");
-		titleLablel.setHorizontalAlignment(SwingConstants.CENTER);
-		titleLablel.setFont(new Font("Calibri", Font.BOLD, 18));
-		titleLablel.setBounds(10, 11, 443, 32);
-		getContentPane().add(titleLablel);
+		JLabel titleLabel = new JLabel("Create Food Menu Account");
+		titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		titleLabel.setFont(new Font("Calibri", Font.BOLD, 18));
+		titleLabel.setBounds(10, 11, 443, 32);
+		getContentPane().add(titleLabel);
 		
 		JLabel emailLabel = new JLabel("Email");
 		emailLabel.setFont(new Font("Calibri", Font.BOLD, 14));
@@ -177,7 +184,11 @@ public class CreateAccountJFrame extends JFrame {
 			
 			try {
 				if(userManager.addNewUser(user)) {
-					JOptionPane.showMessageDialog(null, "User Account Created!\nUsername = " + email);
+					try {
+						JOptionPane.showMessageDialog(null, "User Account Created!\nUsername = " + email);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
 					setVisible(false);
 					LoginJFrame loginJFrame = new LoginJFrame();
 					loginJFrame.setVisible(true);
@@ -186,7 +197,7 @@ public class CreateAccountJFrame extends JFrame {
 					JOptionPane.showMessageDialog(null, "Problem with User Account Creation!");
 					return;
 				}
-			} catch (ServiceLoadException | UserServiceException e1) {
+			} catch (ServiceLoadException | UserServiceException | IOException | HeadlessException e1) {
 				e1.printStackTrace();
 			}
 		}
