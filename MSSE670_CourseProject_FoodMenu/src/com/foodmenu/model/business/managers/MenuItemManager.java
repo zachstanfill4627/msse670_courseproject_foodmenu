@@ -55,7 +55,7 @@ public class MenuItemManager {
 	 * Retrieve All Menu Items
 	 * @throws FoodItemServiceException 
 	 */
-	public ArrayList<MenuItem> retrieveAllMenuItem() throws ServiceLoadException, 
+	public ArrayList<MenuItem> retrieveAllMenuItems() throws ServiceLoadException, 
 		MenuItemServiceException, FoodItemServiceException {
 		
 		ServiceFactory serviceFactory = new ServiceFactory();

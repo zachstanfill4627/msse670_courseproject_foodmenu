@@ -279,6 +279,15 @@ public class DayMenuSvcImplTest {
 			System.out.println(TestClass + ".testDayMenuRetrieve PASSED");	
 	}
 	
+	public void testDayMenuRetrieveAll() throws DayMenuServiceException, MenuItemServiceException, FoodItemServiceException {
+		DayMenuSvcImpl dayMenuImpl = new DayMenuSvcImpl();
+		ArrayList<DayMenu> dayMenus = new ArrayList<DayMenu>();
+		
+		dayMenus = dayMenuImpl.retrieveAllDayMenuData();
+		
+		dayMenus.forEach(item -> System.out.println(item.toString()));
+	}
+	
 	public void testDayMenuUpdate() throws DayMenuServiceException, MenuItemServiceException, FoodItemServiceException {
 		DayMenuSvcImpl dayMenuImpl = new DayMenuSvcImpl();
 		

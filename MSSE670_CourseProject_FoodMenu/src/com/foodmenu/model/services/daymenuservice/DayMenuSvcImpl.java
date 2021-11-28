@@ -147,6 +147,43 @@ public class DayMenuSvcImpl implements IDayMenuService {
 		
 		return dayMenu;
 	}
+	
+	public ArrayList<DayMenu> retrieveAllDayMenuData () throws DayMenuServiceException, MenuItemServiceException, FoodItemServiceException {
+		ArrayList<DayMenu> dayMenus = new ArrayList<DayMenu>();
+		Calendar date = Calendar.getInstance();
+		int year=0, month=0, day=0;
+		
+		
+		/** Re-usable String Buffer for SQL Statement instantiation */ 
+		StringBuffer strBfr = new StringBuffer();
+		
+		/** SQL Statement 1, Select Record from FoodItems Table */
+		strBfr.append(String.format("SELECT date FROM daymenu;"));
+		String query = strBfr.toString();
+		strBfr.setLength(0);
+		
+		try (Connection conn = DriverManager.getConnection(connString);
+                Statement stmt = conn.createStatement()) {          
+            
+            /** Run SQL Query against Users Table */
+            ResultSet rs = stmt.executeQuery(query);
+            
+            while(rs.next()) {
+            	year = Integer.parseInt(rs.getString("date").substring(0,4));
+            	month = Integer.parseInt(rs.getString("date").substring(5,7));
+            	day = Integer.parseInt(rs.getString("date").substring(8,10));
+        		date.set(year, month, day);
+       		
+        		dayMenus.add(retrieveDayMenuData(date));
+            }            
+            
+            return dayMenus;
+		} catch (SQLException e) {
+        	/** Error Output */
+        	System.err.println(e.getMessage());
+        	return null;
+        }
+	}
 
 	public boolean updateDayMenuData(DayMenu dayMenu) throws DayMenuServiceException {
 		deleteDayMenuData(dayMenu);

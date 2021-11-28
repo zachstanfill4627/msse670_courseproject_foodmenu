@@ -21,6 +21,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
@@ -31,6 +32,7 @@ public class FoodMenuJFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
 	private User user = null;
+	
 	private User selectedUser = null;
 	private FoodItem selectedFoodItem = null;
 	private MenuItem selectedMenuItem = null;
@@ -44,6 +46,8 @@ public class FoodMenuJFrame extends JFrame {
 	private IngredientsTableModel ingredientsMenuItemModel = new IngredientsTableModel();
 	private IngredientsTableModel ingredientsDayMenuModel = new IngredientsTableModel();
 	private MenuItemsTableModel menuItemsModel = new MenuItemsTableModel();
+	private MenuItemsTableModel menuItemsDayMenuModel = new MenuItemsTableModel();
+	private DayMenuTableModel dayMenuModel = new DayMenuTableModel();
 	private RecipeTableModel recipeModel = new RecipeTableModel();
 	
 	private int selectedRow = -1;
@@ -51,6 +55,7 @@ public class FoodMenuJFrame extends JFrame {
 	private UserManager userManager = new UserManager();
 	private FoodItemManager foodItemManager = new FoodItemManager();
 	private MenuItemManager menuItemManager = new MenuItemManager();
+	private DayMenuManager	dayMenuManager = new DayMenuManager();
 	
 	private JTable usersTable;
 	private JTable foodItemsTable;
@@ -59,6 +64,10 @@ public class FoodMenuJFrame extends JFrame {
 	private JTable menuItemsTable;
 	private JTable menuFoodItemsTable;
 	private JTable menuIngredientsTable;
+	private JTable dayMenusTable;
+	private JTable dayMenuMenuItemsTable;
+	private JTable dayMenuFoodItemsTable;
+	private JTable dayMenuIngredientsTable;
 	
     public void setUser(User user) {
         this.user = user;
@@ -76,8 +85,15 @@ public class FoodMenuJFrame extends JFrame {
 		}
         
         try {
-			menuItemsModel.setMenuItems(menuItemManager.retrieveAllMenuItem());
+			menuItemsModel.setMenuItems(menuItemManager.retrieveAllMenuItems());
 		} catch (ServiceLoadException | MenuItemServiceException | FoodItemServiceException e) {
+			e.printStackTrace();
+		}
+        
+        try {
+			dayMenuModel.setDayMenus(dayMenuManager.retrieveAllDayMenus());
+		} catch (ServiceLoadException | DayMenuServiceException | MenuItemServiceException
+				| FoodItemServiceException e) {
 			e.printStackTrace();
 		}
         
@@ -103,15 +119,94 @@ public class FoodMenuJFrame extends JFrame {
 	   
 	   //place each container on tabbed pane
 	   tabs.addTab("Day Menus", dayMenus);
+	   
+	   JPanel dayMenusPanel = new JPanel();
+	   dayMenus.add(dayMenusPanel);
+	   dayMenusPanel.setLayout(null);
+	   
+	   JScrollPane dayMenuScrollPane = new JScrollPane();
+	   dayMenuScrollPane.setBounds(10, 11, 809, 218);
+	   dayMenusPanel.add(dayMenuScrollPane);
+	   
+	   dayMenusTable = new JTable();
+	   dayMenusTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+	   dayMenusTable.setFont(new Font("Calibri", Font.BOLD, 12));
+	   dayMenusTable.setModel(new DefaultTableModel(
+	   	new Object[][] {
+	   		{null, null, null},
+	   	},
+	   	new String[] {
+	   		"Date", "Complexity Value", "Health Value"
+	   	}
+	   ));
+	   dayMenuScrollPane.setViewportView(dayMenusTable);
+	   
+	   dayMenusTable.setModel(dayMenuModel);
+	   dayMenusTable.addMouseListener(new selectDayMenuMouseClickListener());
+	   
+	   JScrollPane dayMenuMenuItemsScrollPane = new JScrollPane();
+	   dayMenuMenuItemsScrollPane.setBounds(10, 240, 405, 281);
+	   dayMenusPanel.add(dayMenuMenuItemsScrollPane);
+	   
+	   dayMenuMenuItemsTable = new JTable();
+	   dayMenuMenuItemsTable.setModel(new DefaultTableModel(
+	   	new Object[][] {
+	   		{null, null, null},
+	   	},
+	   	new String[] {
+	   		"Meal Name", "Complexity Value", "Health Value"
+	   	}
+	   ));
+	   dayMenuMenuItemsTable.setFont(new Font("Calibri", Font.BOLD, 12));
+	   dayMenuMenuItemsScrollPane.setViewportView(dayMenuMenuItemsTable);
+	   
+	   JScrollPane dayMenuFoodItemsScrollPane = new JScrollPane();
+	   dayMenuFoodItemsScrollPane.setBounds(426, 240, 393, 141);
+	   dayMenusPanel.add(dayMenuFoodItemsScrollPane);
+	   
+	   dayMenuMenuItemsTable.setModel(menuItemsDayMenuModel);
+	   
+	   dayMenuFoodItemsTable = new JTable();
+	   dayMenuFoodItemsTable.setModel(new DefaultTableModel(
+	   	new Object[][] {
+	   		{"", "", null, null},
+	   	},
+	   	new String[] {
+	   		"Food Name", "Category", "Health Value", "Prep Time"
+	   	}
+	   ));
+	   dayMenuFoodItemsTable.setFont(new Font("Calibri", Font.BOLD, 12));
+	   dayMenuFoodItemsScrollPane.setViewportView(dayMenuFoodItemsTable);
+	   
+	   dayMenuFoodItemsTable.setModel(foodItemsDayMenuModel);
+	   
+	   JScrollPane dayMenuIngredientsScrollPane = new JScrollPane();
+	   dayMenuIngredientsScrollPane.setBounds(425, 392, 394, 129);
+	   dayMenusPanel.add(dayMenuIngredientsScrollPane);
+	   
+	   dayMenuIngredientsTable = new JTable();
+	   dayMenuIngredientsTable.setModel(new DefaultTableModel(
+	   	new Object[][] {
+	   		{null},
+	   	},
+	   	new String[] {
+	   		"Ingredients"
+	   	}
+	   ));
+	   dayMenuIngredientsTable.setFont(new Font("Calibri", Font.BOLD, 12));
+	   dayMenuIngredientsScrollPane.setViewportView(dayMenuIngredientsTable);
+	   
+	   dayMenuIngredientsTable.setModel(ingredientsDayMenuModel);
+	   
 	   tabs.addTab("Menu Items", menuItems);
 	   
-	   JPanel panel = new JPanel();
-	   menuItems.add(panel);
-	   panel.setLayout(null);
+	   JPanel menuItemsPanel = new JPanel();
+	   menuItems.add(menuItemsPanel);
+	   menuItemsPanel.setLayout(null);
 	   
 	   JScrollPane menuItemScrollPane = new JScrollPane();
 	   menuItemScrollPane.setBounds(10, 5, 809, 177);
-	   panel.add(menuItemScrollPane);
+	   menuItemsPanel.add(menuItemScrollPane);
 	   
 	   menuItemsTable = new JTable();
 	   menuItemsTable.setFont(new Font("Calibri", Font.BOLD, 12));
@@ -127,7 +222,7 @@ public class FoodMenuJFrame extends JFrame {
 	   
 	   JScrollPane menuFoodItemScrollPane = new JScrollPane();
 	   menuFoodItemScrollPane.setBounds(10, 193, 522, 334);
-	   panel.add(menuFoodItemScrollPane);
+	   menuItemsPanel.add(menuFoodItemScrollPane);
 	   
 	   menuItemsTable.setModel(menuItemsModel);
 	   menuItemsTable.addMouseListener(new selectMenuItemMouseClickListener());
@@ -147,7 +242,7 @@ public class FoodMenuJFrame extends JFrame {
 	   
 	   JScrollPane menuIngredientsScrollPane = new JScrollPane();
 	   menuIngredientsScrollPane.setBounds(539, 193, 280, 338);
-	   panel.add(menuIngredientsScrollPane);
+	   menuItemsPanel.add(menuIngredientsScrollPane);
 	   
 	   menuIngredientsTable = new JTable();
 	   menuIngredientsTable.setModel(new DefaultTableModel(
@@ -383,6 +478,53 @@ public class FoodMenuJFrame extends JFrame {
 
 		}
 
+		public void mousePressed(MouseEvent e) {}
+		public void mouseReleased(MouseEvent e) {}
+		public void mouseEntered(MouseEvent e) {}
+		public void mouseExited(MouseEvent e) {}
+	}
+	
+	class selectDayMenuMouseClickListener implements MouseListener {
+		public void mouseClicked(MouseEvent e) {
+			int row = dayMenusTable.getSelectedRow();
+			String dateString = dayMenusTable.getModel().getValueAt(row, 0).toString();
+				
+			Calendar date = Calendar.getInstance();
+			int year=0, month=0, day=0;
+			
+        	year = Integer.parseInt(dateString.substring(0,4));
+        	month = Integer.parseInt(dateString.substring(5,7));
+        	day = Integer.parseInt(dateString.substring(8,10));
+    		date.set(year, month, day);
+    		
+    		ArrayList<FoodItem> foodItems = new ArrayList<FoodItem>();
+			ArrayList<String> ingredients = new ArrayList<String>();
+			
+			try {
+				selectedDayMenu = dayMenuManager.retrieveDayMenu(date);
+				menuItemsDayMenuModel.setMenuItems(selectedDayMenu.getMenuList());
+				menuItemsDayMenuModel.fireTableDataChanged();
+				dayMenuManager.retrieveDayMenu(date).getMenuList().forEach(menu -> {{
+					foodItems.addAll(menu.getFoodList());
+				}});
+				foodItemsDayMenuModel.setFoodItems(foodItems);
+				foodItemsDayMenuModel.fireTableDataChanged();
+				foodItems.forEach(item -> {{
+					try {
+						ingredients.addAll(foodItemManager.retrieveFoodItem(item.getFoodName()).getIngredients());
+					} catch (ServiceLoadException | FoodItemServiceException e1) {
+						e1.printStackTrace();
+					}
+				}});
+				ingredientsDayMenuModel.setFoodItem(ingredients);
+				ingredientsDayMenuModel.fireTableDataChanged();
+			} catch (ServiceLoadException | DayMenuServiceException | MenuItemServiceException
+					| FoodItemServiceException e1) {
+				e1.printStackTrace();
+			} 
+			
+		}
+		
 		public void mousePressed(MouseEvent e) {}
 		public void mouseReleased(MouseEvent e) {}
 		public void mouseEntered(MouseEvent e) {}

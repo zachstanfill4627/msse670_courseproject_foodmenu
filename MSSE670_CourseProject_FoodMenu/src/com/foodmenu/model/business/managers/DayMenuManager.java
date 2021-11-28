@@ -1,10 +1,15 @@
 package com.foodmenu.model.business.managers;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+
 import com.foodmenu.model.business.exceptions.ServiceLoadException;
 import com.foodmenu.model.business.factory.ServiceFactory;
 import com.foodmenu.model.domain.DayMenu;
 import com.foodmenu.model.services.daymenuservice.IDayMenuService;
 import com.foodmenu.model.services.exceptions.DayMenuServiceException;
+import com.foodmenu.model.services.exceptions.FoodItemServiceException;
+import com.foodmenu.model.services.exceptions.MenuItemServiceException;
 
 /**
  * @author Zach Stanfill
@@ -45,5 +50,29 @@ public class DayMenuManager {
 		} else {
 			return false;
 		}
+	}
+	
+	/** 
+	 * Use Case : DayMenu-320
+	 * Retrieve All Day Menus
+	 */
+	public ArrayList<DayMenu> retrieveAllDayMenus() throws ServiceLoadException, 
+		DayMenuServiceException, MenuItemServiceException, FoodItemServiceException {
+		
+		ServiceFactory serviceFactory = new ServiceFactory();
+		IDayMenuService dayMenuSvc = (IDayMenuService)serviceFactory.getService("IDayMenuService");
+		return dayMenuSvc.retrieveAllDayMenuData();
+	}
+	
+	/** 
+	 * Use Case : DayMenu-330
+	 * Retrieve Day Menu
+	 */
+	public DayMenu retrieveDayMenu(Calendar date) throws ServiceLoadException, 
+		DayMenuServiceException, MenuItemServiceException, FoodItemServiceException {
+		
+		ServiceFactory serviceFactory = new ServiceFactory();
+		IDayMenuService dayMenuSvc = (IDayMenuService)serviceFactory.getService("IDayMenuService");
+		return dayMenuSvc.retrieveDayMenuData(date);
 	}
 }
