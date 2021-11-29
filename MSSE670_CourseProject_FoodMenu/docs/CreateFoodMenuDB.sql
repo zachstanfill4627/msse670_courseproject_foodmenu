@@ -31,7 +31,7 @@ INSERT INTO fooditems (fooditemid, foodname, category, healthvalue, preptime) VA
 -- Table: info
 DROP TABLE IF EXISTS info;
 CREATE TABLE info (infoid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, infotext TEXT NOT NULL);
-INSERT INTO info (infoid, infotext) VALUES (1, 'password1234');
+INSERT INTO info (infoid, infotext) VALUES (1, 'password');
 INSERT INTO info (infoid, infotext) VALUES (2, 'otherpassword2');
 
 -- Table: ingredients

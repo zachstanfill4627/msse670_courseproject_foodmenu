@@ -189,15 +189,14 @@ public class CreateAccountJFrame extends JFrame {
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
+					
 					setVisible(false);
-					LoginJFrame loginJFrame = new LoginJFrame();
-					loginJFrame.setVisible(true);
-					return;
+					dispose();
 				} else {
 					JOptionPane.showMessageDialog(null, "Problem with User Account Creation!");
 					return;
 				}
-			} catch (ServiceLoadException | UserServiceException | IOException | HeadlessException e1) {
+			} catch (ServiceLoadException | UserServiceException | HeadlessException e1) {
 				e1.printStackTrace();
 			}
 		}

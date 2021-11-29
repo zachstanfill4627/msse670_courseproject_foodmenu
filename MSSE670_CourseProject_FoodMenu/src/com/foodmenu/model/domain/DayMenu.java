@@ -57,6 +57,14 @@ public class DayMenu implements Serializable {
 	public Calendar getDate() {
 		return date;
 	}
+	
+	public String getDateString() {
+		String dateString = String.format("%d-%d-%d", 
+				date.get(Calendar.YEAR), date.get(Calendar.MONTH)+1, 
+				date.get(Calendar.DATE));
+		
+		return dateString;
+	}
 
 	/**
 	 * @param date the date to set

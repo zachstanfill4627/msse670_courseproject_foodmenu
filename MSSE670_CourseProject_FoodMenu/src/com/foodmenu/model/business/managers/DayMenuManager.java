@@ -60,7 +60,7 @@ public class DayMenuManager {
 		DayMenuServiceException, MenuItemServiceException, FoodItemServiceException {
 		
 		ServiceFactory serviceFactory = new ServiceFactory();
-		IDayMenuService dayMenuSvc = (IDayMenuService)serviceFactory.getService("IDayMenuService");
+		IDayMenuService dayMenuSvc = (IDayMenuService)serviceFactory.getService("IDayMenuService");		
 		return dayMenuSvc.retrieveAllDayMenuData();
 	}
 	

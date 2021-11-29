@@ -26,6 +26,9 @@ import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -56,7 +59,7 @@ public class FoodMenuJFrame extends JFrame {
 	private DayMenuTableModel dayMenuModel = new DayMenuTableModel();
 	private RecipeTableModel recipeModel = new RecipeTableModel();
 	
-	private int selectedRow = -1;
+	//private int selectedRow = -1;
 	
 	private UserManager userManager = new UserManager();
 	private FoodItemManager foodItemManager = new FoodItemManager();
@@ -600,13 +603,87 @@ public class FoodMenuJFrame extends JFrame {
 	
 	class createDayMenuButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			JOptionPane.showMessageDialog(null, "You selected to create a Day Menu...\nThis Use Case isn't quite done yet.\n\nStay Tuned!!!");
+			CreateDayMenuJFrame createDayMenuJFrame;
+			
+			createDayMenuJFrame = new CreateDayMenuJFrame();
+			createDayMenuJFrame.setVisible(true);
+			
+			createDayMenuJFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+				public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+					JOptionPane.showMessageDialog(null, "Refreshing Day Menu Table!!");
+					
+					try {
+						dayMenuModel.setDayMenus(dayMenuManager.retrieveAllDayMenus());
+						dayMenuModel.fireTableDataChanged();
+					} catch (ServiceLoadException | DayMenuServiceException | MenuItemServiceException
+							| FoodItemServiceException e) {
+						e.printStackTrace();
+					}
+					
+				}
+			});
 		}
 	}
 	
 	class deleteDayMenuButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			JOptionPane.showMessageDialog(null, "You selected to delete a Day Menu...\nThis Use Case isn't quite done yet.\n\nStay Tuned!!!");		
+			int result = JOptionPane.showConfirmDialog(null, "Are you sure you would like to delete this Day Menu?\n" + selectedDayMenu.getDateString(), "Confirm Delete", JOptionPane.YES_NO_OPTION);
+			
+			if(result == JOptionPane.YES_OPTION) {
+				try {
+					if(dayMenuManager.deleteDayMenu(selectedDayMenu)) {
+						JOptionPane.showMessageDialog(null, "Day Menu \"" + selectedDayMenu.getDateString() + "\" was successfully deleted!");
+						
+						dayMenuModel.setDayMenus(dayMenuManager.retrieveAllDayMenus());
+						dayMenuModel.fireTableDataChanged();
+
+						String dateString = dayMenusTable.getModel().getValueAt(0, 0).toString();
+						
+						Calendar date = Calendar.getInstance();
+						int year=0, month=0, day=0;
+						
+						String[] values = dateString.split("-");
+						
+			        	year = Integer.parseInt(values[0]);
+			        	month = Integer.parseInt(values[1]);
+			        	day = Integer.parseInt(values[2]);
+			    		date.set(year, month, day);
+						
+			    		ArrayList<MenuItem> menuItems = new ArrayList<MenuItem>();
+						ArrayList<FoodItem> foodItems = new ArrayList<FoodItem>();
+						ArrayList<String> ingredients = new ArrayList<String>();
+						
+						try {
+							selectedDayMenu = dayMenuManager.retrieveDayMenu(date);
+							menuItemsDayMenuModel.setMenuItems(selectedDayMenu.getMenuList());
+							menuItemsDayMenuModel.fireTableDataChanged();
+							dayMenuManager.retrieveDayMenu(date).getMenuList().forEach(menu -> {{
+								foodItems.addAll(menu.getFoodList());
+							}});
+							foodItemsDayMenuModel.setFoodItems(foodItems);
+							foodItemsDayMenuModel.fireTableDataChanged();
+							foodItems.forEach(item -> {{
+								try {
+									ingredients.addAll(foodItemManager.retrieveFoodItem(item.getFoodName()).getIngredients());
+								} catch (ServiceLoadException | FoodItemServiceException e1) {
+									e1.printStackTrace();
+								}
+							}});
+							ingredientsDayMenuModel.setFoodItem(ingredients);
+							ingredientsDayMenuModel.fireTableDataChanged();
+						} catch (ServiceLoadException | DayMenuServiceException | MenuItemServiceException
+								| FoodItemServiceException e1) {
+							e1.printStackTrace();
+						} 
+					} else {
+						JOptionPane.showMessageDialog(null, "System Failed to delete day Menu " + selectedDayMenu.getDateString());
+					}
+				} catch (ServiceLoadException | HeadlessException | DayMenuServiceException | MenuItemServiceException | FoodItemServiceException e1) {
+					e1.printStackTrace();
+				}
+			} else {
+				JOptionPane.showMessageDialog(null, "Day Menu " + selectedDayMenu.getDateString() + " was not deleted!");
+			}			
 		}
 	}
 	
@@ -680,24 +757,25 @@ public class FoodMenuJFrame extends JFrame {
 	class selectDayMenuMouseClickListener implements MouseListener {
 		public void mouseClicked(MouseEvent e) {
 			int row = dayMenusTable.getSelectedRow();
-			String dateString = dayMenusTable.getModel().getValueAt(row, 0).toString();
-				
-			Calendar date = Calendar.getInstance();
-			int year=0, month=0, day=0;
+			SimpleDateFormat sdf1 = new SimpleDateFormat("MMM-d-yyyy");
+			Calendar cal = Calendar.getInstance();
 			
-        	year = Integer.parseInt(dateString.substring(0,4));
-        	month = Integer.parseInt(dateString.substring(5,7));
-        	day = Integer.parseInt(dateString.substring(8,10));
-    		date.set(year, month, day);
+			java.util.Date date;
+			try {
+				date = sdf1.parse(dayMenusTable.getModel().getValueAt(row, 0).toString());
+				cal.setTime(date);
+			} catch (ParseException e2) {
+				e2.printStackTrace();
+			}
     		
     		ArrayList<FoodItem> foodItems = new ArrayList<FoodItem>();
 			ArrayList<String> ingredients = new ArrayList<String>();
 			
 			try {
-				selectedDayMenu = dayMenuManager.retrieveDayMenu(date);
+				selectedDayMenu = dayMenuManager.retrieveDayMenu(cal);
 				menuItemsDayMenuModel.setMenuItems(selectedDayMenu.getMenuList());
 				menuItemsDayMenuModel.fireTableDataChanged();
-				dayMenuManager.retrieveDayMenu(date).getMenuList().forEach(menu -> {{
+				dayMenuManager.retrieveDayMenu(cal).getMenuList().forEach(menu -> {{
 					foodItems.addAll(menu.getFoodList());
 				}});
 				foodItemsDayMenuModel.setFoodItems(foodItems);

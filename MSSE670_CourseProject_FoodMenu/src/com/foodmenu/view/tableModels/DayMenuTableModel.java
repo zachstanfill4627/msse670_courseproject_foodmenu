@@ -1,5 +1,7 @@
 package com.foodmenu.view.tableModels;
 
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -15,8 +17,10 @@ public class DayMenuTableModel extends AbstractTableModel {
 	
 	private ArrayList<DayMenu> dayMenus = new ArrayList<DayMenu>();
 	
+	private final DecimalFormat df = new DecimalFormat("#.##");
+	
 	public void setDayMenus(ArrayList<DayMenu> dayMenus) {
-		this.dayMenus = dayMenus;
+		this.dayMenus = dayMenus;		
 	}
 	
 	public int getRowCount() {
@@ -31,18 +35,15 @@ public class DayMenuTableModel extends AbstractTableModel {
 		DayMenu dayMenu = dayMenus.get(row);
 		
 		Calendar date = dayMenu.getDate();
-		
+		SimpleDateFormat sdf = new SimpleDateFormat("MMM-d-yyyy");
+
 		switch (column) {
 			case 0:
-				/** Date Formatter */
-				String dateString = String.format("%d-%d-%d", 
-						date.get(Calendar.YEAR), date.get(Calendar.MONTH), 
-						date.get(Calendar.DATE));
-				return dateString;
+				return sdf.format(date.getTime()).toString();
 			case 1:
 				return dayMenu.getComplexityValue();
 			case 2:
-				return dayMenu.getHealthValue();
+				return df.format(dayMenu.getHealthValue());
 		}
 		return "";
 	}

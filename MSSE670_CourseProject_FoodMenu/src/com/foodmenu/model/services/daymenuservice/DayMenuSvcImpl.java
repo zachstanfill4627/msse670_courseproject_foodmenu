@@ -1,10 +1,13 @@
 package com.foodmenu.model.services.daymenuservice;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -103,7 +106,7 @@ public class DayMenuSvcImpl implements IDayMenuService {
 		StringBuffer strBfr = new StringBuffer();
 		
 		/** SQL Statement 1, Select Record from MenuItems Table */
-		strBfr.append(String.format("SELECT * FROM daymenu WHERE date == "
+		strBfr.append(String.format("SELECT * FROM daymenu WHERE date like "
 				+ "\"%s\"", dateString));
 		String query = strBfr.toString();
 		strBfr.setLength(0);
@@ -149,9 +152,11 @@ public class DayMenuSvcImpl implements IDayMenuService {
 	}
 	
 	public ArrayList<DayMenu> retrieveAllDayMenuData () throws DayMenuServiceException, MenuItemServiceException, FoodItemServiceException {
+		DayMenu dayMenu = new DayMenu();
 		ArrayList<DayMenu> dayMenus = new ArrayList<DayMenu>();
-		Calendar date = Calendar.getInstance();
-		int year=0, month=0, day=0;
+		ArrayList<String> dateValues = new ArrayList<String>();
+//		Calendar cal = Calendar.getInstance();
+		//int year=0, month=0, day=0;
 		
 		
 		/** Re-usable String Buffer for SQL Statement instantiation */ 
@@ -169,13 +174,24 @@ public class DayMenuSvcImpl implements IDayMenuService {
             ResultSet rs = stmt.executeQuery(query);
             
             while(rs.next()) {
-            	year = Integer.parseInt(rs.getString("date").substring(0,4));
-            	month = Integer.parseInt(rs.getString("date").substring(5,7));
-            	day = Integer.parseInt(rs.getString("date").substring(8,10));
-        		date.set(year, month, day);
-       		
-        		dayMenus.add(retrieveDayMenuData(date));
+            	dateValues.add(rs.getString("date"));
             }            
+            
+            dateValues.forEach(item -> {{
+            	Calendar cal = Calendar.getInstance();
+            	int year = Integer.parseInt(item.split("-")[0]);
+            	int month = Integer.parseInt(item.split("-")[1]);
+            	int day = Integer.parseInt(item.split("-")[2]);
+            	cal.set(year, month, day);
+            	
+            	try {
+					dayMenus.add(retrieveDayMenuData(cal));
+				} catch (DayMenuServiceException | MenuItemServiceException | FoodItemServiceException e) {
+					e.printStackTrace();
+				}
+            }});
+            
+            dayMenus.forEach(item -> System.out.println(item.getDateString()));
             
             return dayMenus;
 		} catch (SQLException e) {

@@ -33,9 +33,9 @@ public class MenuItemsTableModel extends AbstractTableModel {
 			case 0:
 				return menuItem.getMealName();
 			case 1:
-				return df.format(menuItem.getComplexityValue());
+				return menuItem.getComplexityValue();
 			case 2:
-				return menuItem.getHealthValue();
+				return df.format(menuItem.getHealthValue());
 		}
 		return "";
 	}

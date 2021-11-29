@@ -56,7 +56,7 @@ public class LoginJFrame extends JFrame {
 		getContentPane().add(unameLabel);
 		
 		unameField = new JTextField();
-		unameField.setText("zach.stanfill4627@gmail.com");
+		unameField.setText("zstanfill@regis.edu");
 		unameField.setFont(new Font("Calibri", Font.BOLD, 16));
 		unameField.setColumns(10);
 		unameField.setBounds(10, 121, 443, 26);
@@ -92,6 +92,11 @@ public class LoginJFrame extends JFrame {
 			try {
 				createAccountJFrame = new CreateAccountJFrame();
 				createAccountJFrame.setVisible(true);
+				createAccountJFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+					public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+						setVisible(true);						
+					}
+				});
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}			
