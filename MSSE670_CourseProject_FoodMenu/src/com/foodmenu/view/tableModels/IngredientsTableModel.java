@@ -42,5 +42,4 @@ public class IngredientsTableModel extends AbstractTableModel {
 	public String getColumnName(int column) {
 		return columnNames[column];
 	}
-
 }

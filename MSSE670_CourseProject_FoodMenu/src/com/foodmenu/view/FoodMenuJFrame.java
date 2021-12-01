@@ -1,6 +1,5 @@
 package com.foodmenu.view;
 
-import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -59,7 +58,7 @@ public class FoodMenuJFrame extends JFrame {
 	private DayMenuTableModel dayMenuModel = new DayMenuTableModel();
 	private RecipeTableModel recipeModel = new RecipeTableModel();
 	
-	//private int selectedRow = -1;
+	private java.util.Date date; 
 	
 	private UserManager userManager = new UserManager();
 	private FoodItemManager foodItemManager = new FoodItemManager();
@@ -432,7 +431,7 @@ public class FoodMenuJFrame extends JFrame {
 				} else {
 					JOptionPane.showMessageDialog(null, "Error in setting " + selectedUser.getEmailAddress() + " password!");
 				}
-			} catch (ServiceLoadException | UserServiceException e1) {
+			} catch (ServiceLoadException | UserServiceException | HeadlessException | IOException e1) {
 				e1.printStackTrace();
 			}
 		}
@@ -502,8 +501,19 @@ public class FoodMenuJFrame extends JFrame {
 				try {
 					if(foodItemManager.deleteFoodItem(selectedFoodItem)) {
 						JOptionPane.showMessageDialog(null, "Food Item \"" + selectedFoodItem.getFoodName() + "\" was successfully deleted!");
-						foodItemsModel.setFoodItems(foodItemManager.retrieveAllFoodItems());
+
+						ArrayList<FoodItem> foodItems = foodItemManager.retrieveAllFoodItems(); 
+						
+						foodItemsModel.setFoodItems(foodItems);
 						foodItemsModel.fireTableDataChanged();
+						
+						if(foodItems.size() == 0) {
+							ingredientsFoodItemModel.setFoodItem(new ArrayList<String>());
+							ingredientsFoodItemModel.fireTableDataChanged();
+							recipeModel.setFoodItem(new FoodItem());
+							recipeModel.fireTableDataChanged();
+							return;
+						}
 						
 						String foodName = foodItemsTable.getModel().getValueAt(0, 0).toString();
 
@@ -572,12 +582,24 @@ public class FoodMenuJFrame extends JFrame {
 				try {
 					if(menuItemManager.deleteMenuItem(selectedMenuItem)) {
 						JOptionPane.showMessageDialog(null, "Menu Item \"" + selectedMenuItem.getMealName() + "\" was successfully deleted!");
-						menuItemsModel.setMenuItems(menuItemManager.retrieveAllMenuItems());
+						
+						ArrayList<MenuItem> menuItems = menuItemManager.retrieveAllMenuItems(); 
+						
+						menuItemsModel.setMenuItems(menuItems);
 						menuItemsModel.fireTableDataChanged();
+											
+						ArrayList<String> ingredients = new ArrayList<String>();
+						
+						if(menuItems.size() == 0) {
+							foodItemsMenuItemModel.setFoodItems(new ArrayList<FoodItem>());
+							foodItemsMenuItemModel.fireTableDataChanged();
+							ingredientsMenuItemModel.setFoodItem(ingredients);
+							ingredientsMenuItemModel.fireTableDataChanged();														
+							return;
+						}
 						
 						String mealName = menuItemsTable.getModel().getValueAt(0, 0).toString();
-						ArrayList<String> ingredients = new ArrayList<String>();
-
+						
 						try {
 							foodItemsMenuItemModel.setFoodItems(selectedMenuItem.getFoodList());
 							foodItemsMenuItemModel.fireTableDataChanged();
@@ -634,30 +656,38 @@ public class FoodMenuJFrame extends JFrame {
 					if(dayMenuManager.deleteDayMenu(selectedDayMenu)) {
 						JOptionPane.showMessageDialog(null, "Day Menu \"" + selectedDayMenu.getDateString() + "\" was successfully deleted!");
 						
-						dayMenuModel.setDayMenus(dayMenuManager.retrieveAllDayMenus());
+						ArrayList<DayMenu> dayMenus = dayMenuManager.retrieveAllDayMenus();
+						
+						dayMenuModel.setDayMenus(dayMenus);
 						dayMenuModel.fireTableDataChanged();
-
-						String dateString = dayMenusTable.getModel().getValueAt(0, 0).toString();
-						
-						Calendar date = Calendar.getInstance();
-						int year=0, month=0, day=0;
-						
-						String[] values = dateString.split("-");
-						
-			        	year = Integer.parseInt(values[0]);
-			        	month = Integer.parseInt(values[1]);
-			        	day = Integer.parseInt(values[2]);
-			    		date.set(year, month, day);
-						
+							
 			    		ArrayList<MenuItem> menuItems = new ArrayList<MenuItem>();
 						ArrayList<FoodItem> foodItems = new ArrayList<FoodItem>();
 						ArrayList<String> ingredients = new ArrayList<String>();
 						
+						if(dayMenus.size() == 0) {
+							menuItemsDayMenuModel.setMenuItems(menuItems);
+							menuItemsDayMenuModel.fireTableDataChanged();
+							foodItemsDayMenuModel.setFoodItems(foodItems);
+							foodItemsDayMenuModel.fireTableDataChanged();
+							ingredientsDayMenuModel.setFoodItem(ingredients);
+							ingredientsDayMenuModel.fireTableDataChanged();
+							
+							return;
+						}						
+						
+						SimpleDateFormat sdf1 = new SimpleDateFormat("MMM-d-yyyy");
+						date = sdf1.parse(dayMenusTable.getModel().getValueAt(0, 0).toString());
+						
+						Calendar cal = Calendar.getInstance();
+						
+			    		cal.setTime(date);
+						
 						try {
-							selectedDayMenu = dayMenuManager.retrieveDayMenu(date);
+							selectedDayMenu = dayMenuManager.retrieveDayMenu(cal);
 							menuItemsDayMenuModel.setMenuItems(selectedDayMenu.getMenuList());
 							menuItemsDayMenuModel.fireTableDataChanged();
-							dayMenuManager.retrieveDayMenu(date).getMenuList().forEach(menu -> {{
+							dayMenuManager.retrieveDayMenu(cal).getMenuList().forEach(menu -> {{
 								foodItems.addAll(menu.getFoodList());
 							}});
 							foodItemsDayMenuModel.setFoodItems(foodItems);
@@ -678,7 +708,7 @@ public class FoodMenuJFrame extends JFrame {
 					} else {
 						JOptionPane.showMessageDialog(null, "System Failed to delete day Menu " + selectedDayMenu.getDateString());
 					}
-				} catch (ServiceLoadException | HeadlessException | DayMenuServiceException | MenuItemServiceException | FoodItemServiceException e1) {
+				} catch (ServiceLoadException | HeadlessException | DayMenuServiceException | MenuItemServiceException | FoodItemServiceException | ParseException e1) {
 					e1.printStackTrace();
 				}
 			} else {
@@ -760,7 +790,7 @@ public class FoodMenuJFrame extends JFrame {
 			SimpleDateFormat sdf1 = new SimpleDateFormat("MMM-d-yyyy");
 			Calendar cal = Calendar.getInstance();
 			
-			java.util.Date date;
+			
 			try {
 				date = sdf1.parse(dayMenusTable.getModel().getValueAt(row, 0).toString());
 				cal.setTime(date);

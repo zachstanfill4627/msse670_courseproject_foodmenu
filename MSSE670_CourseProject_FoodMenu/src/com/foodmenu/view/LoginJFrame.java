@@ -2,6 +2,7 @@ package com.foodmenu.view;
 
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -56,7 +57,6 @@ public class LoginJFrame extends JFrame {
 		getContentPane().add(unameLabel);
 		
 		unameField = new JTextField();
-//		unameField.setText("zstanfill@regis.edu");
 		unameField.setFont(new Font("Calibri", Font.BOLD, 16));
 		unameField.setColumns(10);
 		unameField.setBounds(10, 121, 443, 26);
@@ -131,8 +131,51 @@ public class LoginJFrame extends JFrame {
 	
 	class resetPWButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			JOptionPane.showMessageDialog(null, "Reset Password Not Yet Implemented!\n"
-					+ "Please See an Administrator");
+			String email = JOptionPane.showInputDialog("Resetting Password!\n\nWhat is your email address?");
+			int age = 0;
+			try {	
+				age = Integer.parseInt(JOptionPane.showInputDialog("Resetting Password!\n\nHow old were you when this account was created?"));
+			} catch (NumberFormatException nfe) {
+				JOptionPane.showMessageDialog(null, "Invalid age input...\n\n Number Characters Only!\n\nPlease Try Again!");
+				return;
+			}
+				
+			String recPhrase = JOptionPane.showInputDialog("Resetting Password!\n\nRecovery Question\nWhat do you want to be when you grown up?");
+			
+			if (email == null || age == 0 || recPhrase == null) {
+				JOptionPane.showMessageDialog(null, "User Identity could not be verified because the Username, Age, or Recovery Phrase were incorrect!\n\nPlease try again!");
+				return;
+			}
+			
+			String password1 = "";
+			String password2 = "";
+			
+			UserManager userManager = new UserManager();
+			
+			try {
+				if(userManager.resetUserPassword(email, age, recPhrase)) {
+					try {
+						do {
+							if(password1.equals(password2) && !password1.equals("")) {
+								JOptionPane.showMessageDialog(null, "Password doesn't meet Password Policy Standards!\n\n Please try again!");
+							} else if (!password1.equals("")) {
+								JOptionPane.showMessageDialog(null, "Passwords didn't match!\n\n Please try again!");
+							}
+							password1 = JOptionPane.showInputDialog("Resetting Password!\n\nIdentity Confirmed\nPlease enter your new password:");
+							password2 = JOptionPane.showInputDialog("Resetting Password!\n\nIdentity Confirmed\nPlease Confirm your new password:");
+						} while (!userManager.resetUserPassword(email, password1) || !password1.equals(password2));
+						JOptionPane.showMessageDialog(null, "User Password reset successfully");
+					} catch (HeadlessException | UserServiceException | ServiceLoadException | IOException e1) {
+						e1.printStackTrace();
+					} catch (NullPointerException e2) {
+						JOptionPane.showMessageDialog(null, "User Exited Password Reset!");
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "User Identity could not be verified because the Username, Age, or Recovery Phrase were incorrect!\n\nPlease try again!");			
+				}
+			} catch (HeadlessException | ServiceLoadException | UserServiceException e1) {
+				e1.printStackTrace();
+			}
 			return;
 		}
 	}

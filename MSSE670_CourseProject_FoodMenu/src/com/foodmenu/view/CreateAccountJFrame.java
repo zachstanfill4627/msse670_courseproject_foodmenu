@@ -193,10 +193,14 @@ public class CreateAccountJFrame extends JFrame {
 					setVisible(false);
 					dispose();
 				} else {
-					JOptionPane.showMessageDialog(null, "Problem with User Account Creation!");
+					if(!userManager.isValidPassword(password)) {
+						JOptionPane.showMessageDialog(null, "Password not Strong Enough!\n\nSee Administrator for password complexity requirements!");
+					} else {
+						JOptionPane.showMessageDialog(null, "Problem with User Account Creation!");
+					}
 					return;
 				}
-			} catch (ServiceLoadException | UserServiceException | HeadlessException e1) {
+			} catch (ServiceLoadException | UserServiceException | HeadlessException | IOException e1) {
 				e1.printStackTrace();
 			}
 		}

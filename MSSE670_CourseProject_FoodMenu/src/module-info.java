@@ -3,4 +3,5 @@ module MSSE600_CourseProject_FoodMenu {
 	requires java.sql;
 	requires org.xerial.sqlitejdbc;
 	requires java.desktop;
+	requires org.apache.commons.codec;
 }

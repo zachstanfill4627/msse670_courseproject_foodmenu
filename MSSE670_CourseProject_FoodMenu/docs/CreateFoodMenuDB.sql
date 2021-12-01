@@ -31,8 +31,14 @@ INSERT INTO fooditems (fooditemid, foodname, category, healthvalue, preptime) VA
 -- Table: info
 DROP TABLE IF EXISTS info;
 CREATE TABLE info (infoid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, infotext TEXT NOT NULL);
-INSERT INTO info (infoid, infotext) VALUES (1, 'password');
-INSERT INTO info (infoid, infotext) VALUES (2, 'otherpassword2');
+INSERT INTO info (infoid, infotext) VALUES (1, '22b5f5c6b963d8b1be83b0501a00528512fd3de080a3a63b1215e4d1f08ab26dc3612b3c8ba1f9b2177310c56bb7b78f9d76a25ff146476d8083575341e7edc7');
+INSERT INTO info (infoid, infotext) VALUES (2, 'a468165530a795dcdf220c8103315219ccf0e52782752b7fab1f9a3eeda63d98cc0131147101f2a210866da0b9029b5e48b545ed788eff71d666b4d2f308ef04');
+
+-- Table: salt
+DROP TABLE IF EXISTS salt;
+CREATE TABLE salt (saltid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, salttext TEXT NOT NULL);
+INSERT INTO salt (saltid, salttext) VALUES (1, 'mgrYSUDSoQ3G4Z6lGv4fisCJa76Yt5Fv');
+INSERT INTO salt (saltid, salttext) VALUES (2, 'GZGogBWbOvZ375qj5lBg8wx4Eyv1LxeU');
 
 -- Table: ingredients
 DROP TABLE IF EXISTS ingredients;
@@ -102,7 +108,7 @@ INSERT INTO recipe (recipeid, fooditemid, steptext) VALUES (23, 5, 'Add Salad Dr
 INSERT INTO recipe (recipeid, fooditemid, steptext) VALUES (24, 6, 'Scoop Ice Cream into individual bowl.');
 INSERT INTO recipe (recipeid, fooditemid, steptext) VALUES (25, 6, 'Add Hot Fudge.');
 
--- Table: roles
+-- Table: rolesa
 DROP TABLE IF EXISTS roles;
 CREATE TABLE roles (roleid INTEGER PRIMARY KEY AUTOINCREMENT, rolename TEXT NOT NULL);
 INSERT INTO roles (roleid, rolename) VALUES (1, 'admin');
@@ -110,9 +116,9 @@ INSERT INTO roles (roleid, rolename) VALUES (2, 'user');
 
 -- Table: users
 DROP TABLE IF EXISTS users;
-CREATE TABLE users (userid INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, firstname TEXT NOT NULL, lastname TEXT NOT NULL, email TEXT NOT NULL UNIQUE ON CONFLICT FAIL, recoveryphrase TEXT NOT NULL, age INTEGER NOT NULL, role INTEGER REFERENCES roles (roleid) NOT NULL, infoid INTEGER REFERENCES info (infoid));
-INSERT INTO users (userid, firstname, lastname, email, recoveryphrase, age, role, infoid) VALUES (1, 'zach', 'stanfill', 'zstanfill@regis.edu', 'pineapple', 29, 1, 1);
-INSERT INTO users (userid, firstname, lastname, email, recoveryphrase, age, role, infoid) VALUES (2, 'kasey', 'stanfill', 'kcstanfill@notareal.email', 'dog', 28, 2, 2);
+CREATE TABLE users (userid INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, firstname TEXT NOT NULL, lastname TEXT NOT NULL, email TEXT NOT NULL UNIQUE ON CONFLICT FAIL, recoveryphrase TEXT NOT NULL, age INTEGER NOT NULL, role INTEGER REFERENCES roles (roleid) NOT NULL, infoid INTEGER REFERENCES info (infoid), saltid INTEGER REFERENCES salt (saltid));
+INSERT INTO users (userid, firstname, lastname, email, recoveryphrase, age, role, infoid, saltid) VALUES (1, 'admin', 'istrator', 'admin@not.areal.email', 'I Am Groot!', 29, 1, 1, 1);
+INSERT INTO users (userid, firstname, lastname, email, recoveryphrase, age, role, infoid, saltid) VALUES (2, 'justa', 'user', 'user@not.areal.email', 'Left Alone', 28, 2, 2, 2);
 
 COMMIT TRANSACTION;
 PRAGMA foreign_keys = on;

@@ -38,13 +38,13 @@ public class UserManagerTest {
 	}
 	
 	@Test
-	public void testUserManager() throws UserServiceException {
+	public void testUserManager() throws UserServiceException, IOException {
 		testUserAdd();
 		testUserAuthenticate();
 		testUserDelete();
 	}
 	
-	public void testUserAdd() throws UserServiceException {
+	public void testUserAdd() throws UserServiceException, IOException {
 		UserManager userManager = new UserManager();
 		
 		try {

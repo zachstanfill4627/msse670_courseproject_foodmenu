@@ -155,9 +155,6 @@ public class DayMenuSvcImpl implements IDayMenuService {
 		DayMenu dayMenu = new DayMenu();
 		ArrayList<DayMenu> dayMenus = new ArrayList<DayMenu>();
 		ArrayList<String> dateValues = new ArrayList<String>();
-//		Calendar cal = Calendar.getInstance();
-		//int year=0, month=0, day=0;
-		
 		
 		/** Re-usable String Buffer for SQL Statement instantiation */ 
 		StringBuffer strBfr = new StringBuffer();
@@ -190,8 +187,6 @@ public class DayMenuSvcImpl implements IDayMenuService {
 					e.printStackTrace();
 				}
             }});
-            
-            dayMenus.forEach(item -> System.out.println(item.getDateString()));
             
             return dayMenus;
 		} catch (SQLException e) {
