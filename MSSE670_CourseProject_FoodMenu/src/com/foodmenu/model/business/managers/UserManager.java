@@ -14,6 +14,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
 import com.foodmenu.model.business.exceptions.ServiceLoadException;
+import com.foodmenu.model.business.exceptions.UserPrivilegesException;
 import com.foodmenu.model.business.factory.ServiceFactory;
 import com.foodmenu.model.domain.User;
 import com.foodmenu.model.services.exceptions.UserServiceException;
@@ -29,6 +30,8 @@ public class UserManager {
 	
 	private static String propertiesFile = "config/application.properties";
 	
+	private User user;
+	
 	/** Default Password Policy Values */
 	private static int minLength = 8;
 	private static int maxLength = 24;
@@ -38,6 +41,10 @@ public class UserManager {
 	private static int keyLength = 512;
 	
 	public UserManager() {
+	}
+	
+	public UserManager(User user) {
+		this.user = user;
 	}
 	
 	/** 
@@ -81,14 +88,18 @@ public class UserManager {
 	 * Delete Existing User 
 	 */
 	public boolean deleteUser(User user) throws ServiceLoadException, 
-		UserServiceException {
+		UserServiceException, UserPrivilegesException {
 		
-		ServiceFactory serviceFactory = new ServiceFactory();
-		IUserService userSvc = (IUserService)serviceFactory.getService("IUserService");
-		if(userSvc.deleteUserData(user)) {
-			return true;
+		if(this.user.getRole().equals("admin")) {
+			ServiceFactory serviceFactory = new ServiceFactory();
+			IUserService userSvc = (IUserService)serviceFactory.getService("IUserService");
+			if(userSvc.deleteUserData(user)) {
+				return true;
+			} else {
+				return false;
+			}
 		} else {
-			return false;
+			throw new UserPrivilegesException(String.format("User %s isn't an admin, and therefore does not have the \nappropriate privileges to perform delete task!", user.getEmailAddress()));
 		}
 	}
 	

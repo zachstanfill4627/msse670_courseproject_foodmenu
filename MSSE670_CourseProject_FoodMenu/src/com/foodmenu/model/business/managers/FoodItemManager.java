@@ -3,8 +3,10 @@ package com.foodmenu.model.business.managers;
 import java.util.ArrayList;
 
 import com.foodmenu.model.business.exceptions.ServiceLoadException;
+import com.foodmenu.model.business.exceptions.UserPrivilegesException;
 import com.foodmenu.model.business.factory.ServiceFactory;
 import com.foodmenu.model.domain.FoodItem;
+import com.foodmenu.model.domain.User;
 import com.foodmenu.model.services.exceptions.FoodItemServiceException;
 import com.foodmenu.model.services.fooditemservice.IFoodItemService;
 
@@ -14,7 +16,13 @@ import com.foodmenu.model.services.fooditemservice.IFoodItemService;
  */
 public class FoodItemManager {
 
+	private User user;
+	
 	public FoodItemManager() {
+	}
+	
+	public FoodItemManager(User user) {
+		this.user = user;
 	}
 	
 	/** 
@@ -36,16 +44,21 @@ public class FoodItemManager {
 	/** 
 	 * Use Case : FoodItem-110
 	 * Delete Existing Food Item
+	 * @throws UserPrivilegesException 
 	 */
 	public boolean deleteFoodItem(FoodItem foodItem) throws ServiceLoadException, 
-		FoodItemServiceException {
+		FoodItemServiceException, UserPrivilegesException {
 		
-		ServiceFactory serviceFactory = new ServiceFactory();
-		IFoodItemService foodItemSvc = (IFoodItemService)serviceFactory.getService("IFoodItemService");
-		if(foodItemSvc.deleteFoodItemData(foodItem)) {
-			return true;
+		if(this.user.getRole().equals("admin")) {
+			ServiceFactory serviceFactory = new ServiceFactory();
+			IFoodItemService foodItemSvc = (IFoodItemService)serviceFactory.getService("IFoodItemService");
+			if(foodItemSvc.deleteFoodItemData(foodItem)) {
+				return true;
+			} else {
+				return false;
+			}
 		} else {
-			return false;
+			throw new UserPrivilegesException(String.format("User %s isn't an admin, and therefore does not have the \nappropriate privileges to perform delete task!", user.getEmailAddress()));
 		}
 	}
 	

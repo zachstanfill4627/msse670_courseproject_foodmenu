@@ -13,7 +13,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 import javax.swing.SwingConstants;
 
@@ -163,13 +166,26 @@ public class CreateAccountJFrame extends JFrame {
 	
 	class createButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
+			String propertiesFile = "config/application.properties";
+			String adminpasscode;
+			
+			/** Read Configured Properties */
+			try (InputStream input = new FileInputStream(propertiesFile)) {
+	            Properties prop = new Properties();
+	            prop.load(input);
+	            adminpasscode = prop.getProperty("admin.passcode");    		
+			} catch (Exception e1) {
+	    		System.err.println("Error in reading property file password values, setting to default values!");
+	    		adminpasscode = "MenuAdmin";	
+	        }    
+			
 			String fName = fNameField.getText();
 			String lName = lNameField.getText();
 			String email = emailField.getText();
 			String recPhrase = recPhraseField.getText();
 			String password = "";
 			int age = (int) ageSpinner.getValue();
-			String role = userLevelDropdown.getSelectedItem().toString();
+			String role = "user";
 			
 			if(passwordField.getText().equals(confirmPassField.getText())) {
 				password = passwordField.getText();
@@ -177,6 +193,15 @@ public class CreateAccountJFrame extends JFrame {
 				JOptionPane.showMessageDialog(null, "Passwords do not match!");
 				return;
 			}
+			
+			if(userLevelDropdown.getSelectedItem().toString().equals("admin")) {
+				if(JOptionPane.showInputDialog("Input Pre-Defined Admin Passcode:").equals(adminpasscode)) {
+					role = "admin";
+				} else {
+					JOptionPane.showMessageDialog(null, "Pre-Defined Admin Passcode incorrect, Downgrading to Role = User");
+					role = "user";
+				}
+			} 
 			
 			User user = new User(fName, lName, email, password, recPhrase, age, role);
 			

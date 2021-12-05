@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
 import com.foodmenu.model.business.exceptions.ServiceLoadException;
+import com.foodmenu.model.business.exceptions.UserPrivilegesException;
 import com.foodmenu.model.business.managers.*;
 import com.foodmenu.model.domain.*;
 import com.foodmenu.model.services.exceptions.*;
@@ -60,10 +61,10 @@ public class FoodMenuJFrame extends JFrame {
 	
 	private java.util.Date date; 
 	
-	private UserManager userManager = new UserManager();
-	private FoodItemManager foodItemManager = new FoodItemManager();
-	private MenuItemManager menuItemManager = new MenuItemManager();
-	private DayMenuManager	dayMenuManager = new DayMenuManager();
+	private UserManager userManager;
+	private FoodItemManager foodItemManager;
+	private MenuItemManager menuItemManager;
+	private DayMenuManager	dayMenuManager;
 	
 	private JTable usersTable;
 	private JTable foodItemsTable;
@@ -79,6 +80,11 @@ public class FoodMenuJFrame extends JFrame {
 	
     public void setUser(User user) {
         this.user = user;
+        
+        userManager = new UserManager(user);
+    	foodItemManager = new FoodItemManager(user);
+    	menuItemManager = new MenuItemManager(user);
+    	dayMenuManager = new DayMenuManager(user);
         
         try {
 			usersModel.setUsers(userManager.retrieveAllUsers());
@@ -450,8 +456,10 @@ public class FoodMenuJFrame extends JFrame {
 					} else {
 						JOptionPane.showMessageDialog(null, "System Failed to delete user \n" + selectedUser.getEmailAddress());
 					}
-				} catch (ServiceLoadException | UserServiceException e1) {
+				} catch (ServiceLoadException | UserServiceException | HeadlessException e1) {
 					e1.printStackTrace();
+				} catch (UserPrivilegesException e2) {
+					JOptionPane.showMessageDialog(null, "System Failed to delete user \n" + selectedUser.getEmailAddress() + "\n\n" + e2.getMessage());
 				}
 				
 			} else {
@@ -529,8 +537,10 @@ public class FoodMenuJFrame extends JFrame {
 					} else {
 						JOptionPane.showMessageDialog(null, "System Failed to delete food item \"" + selectedFoodItem.getFoodName() + "\"");
 					}
-				} catch (ServiceLoadException | FoodItemServiceException e1) {
+				} catch (ServiceLoadException | FoodItemServiceException | HeadlessException e1) {
 					e1.printStackTrace();
+				} catch (UserPrivilegesException e2) {
+					JOptionPane.showMessageDialog(null, "System Failed to delete food item \n" + selectedFoodItem.getFoodName() + "\n\n" + e2.getMessage());
 				}
 			} else {
 				JOptionPane.showMessageDialog(null, "Food Item \"" + selectedFoodItem.getFoodName() + "\" was not deleted!");
@@ -616,6 +626,8 @@ public class FoodMenuJFrame extends JFrame {
 					}
 				} catch (ServiceLoadException | FoodItemServiceException | HeadlessException | MenuItemServiceException e1) {
 					e1.printStackTrace();
+				} catch (UserPrivilegesException e2) {
+					JOptionPane.showMessageDialog(null, "System Failed to delete menu item \n" + selectedMenuItem.getMealName() + "\n\n" + e2.getMessage());
 				}
 			} else {
 				JOptionPane.showMessageDialog(null, "Menu Item \"" + selectedMenuItem.getMealName() + "\" was not deleted!");
@@ -710,6 +722,8 @@ public class FoodMenuJFrame extends JFrame {
 					}
 				} catch (ServiceLoadException | HeadlessException | DayMenuServiceException | MenuItemServiceException | FoodItemServiceException | ParseException e1) {
 					e1.printStackTrace();
+				} catch (UserPrivilegesException e2) {
+					JOptionPane.showMessageDialog(null, "System Failed to delete day menu \n" + selectedDayMenu.getDateString() + "\n\n" + e2.getMessage());
 				}
 			} else {
 				JOptionPane.showMessageDialog(null, "Day Menu " + selectedDayMenu.getDateString() + " was not deleted!");

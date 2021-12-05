@@ -12,6 +12,7 @@ import org.junit.After;
 import org.junit.Before;
 
 import com.foodmenu.model.business.exceptions.ServiceLoadException;
+import com.foodmenu.model.business.exceptions.UserPrivilegesException;
 import com.foodmenu.model.business.factory.ServiceFactory;
 import com.foodmenu.model.business.managers.DayMenuManager;
 import com.foodmenu.model.business.managers.FoodItemManager;
@@ -19,6 +20,7 @@ import com.foodmenu.model.business.managers.MenuItemManager;
 import com.foodmenu.model.domain.DayMenu;
 import com.foodmenu.model.domain.FoodItem;
 import com.foodmenu.model.domain.MenuItem;
+import com.foodmenu.model.domain.User;
 import com.foodmenu.model.services.exceptions.DayMenuServiceException;
 import com.foodmenu.model.services.exceptions.FoodItemServiceException;
 import com.foodmenu.model.services.exceptions.MenuItemServiceException;
@@ -27,6 +29,10 @@ public class DayMenuManagerTest {
 	
 	private final String TestClass = "DayMenuManager";
 
+	private DayMenuManager dayMenuManager;
+	private MenuItemManager menuItemManager;
+	private FoodItemManager foodItemManager;
+	
 	private ServiceFactory serviceFactory;
 	private DayMenu dayMenu;
 	private ArrayList<FoodItem> foodList = new ArrayList<FoodItem>();
@@ -37,13 +43,19 @@ public class DayMenuManagerTest {
 	public void setUp() throws Exception {
 		serviceFactory = new ServiceFactory();
 		
+		ObjectInputStream adminObject = null;
 		ObjectInputStream dayMenuObject = null;
 		try {
+			adminObject = new ObjectInputStream(new FileInputStream("data/testObjectFiles/user_testAdmin.obj"));
 			dayMenuObject = new ObjectInputStream(new FileInputStream("data/testObjectFiles/dayMenu_20211106.obj"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		User admin = (User)adminObject.readObject(); 
 		
+		dayMenuManager = new DayMenuManager(admin);
+		foodItemManager = new FoodItemManager(admin);
+		menuItemManager = new MenuItemManager(admin);
 		dayMenu = (DayMenu)dayMenuObject.readObject();
 		
 		menuList = dayMenu.getMenuList();
@@ -51,10 +63,6 @@ public class DayMenuManagerTest {
 		menuList.forEach(menu -> {
 			foodList.addAll(menu.getFoodList());
 		});
-			
-		
-		FoodItemManager foodItemManager = new FoodItemManager();
-		MenuItemManager menuItemManager = new MenuItemManager();
 		
 		foodList.forEach(food -> {
 			try {
@@ -74,13 +82,12 @@ public class DayMenuManagerTest {
 	
 	
 	@Test
-	public void testDayMenuManager() throws DayMenuServiceException {
+	public void testDayMenuManager() throws DayMenuServiceException, UserPrivilegesException {
 		testDayMenuManagerAddDay();
 		testDayMenuManagerDeleteDay();
 	}
 	
 	public void testDayMenuManagerAddDay() throws DayMenuServiceException {
-		DayMenuManager dayMenuManager = new DayMenuManager();
 		
 		try {
 			assertTrue ("dayMenuManager addNew", dayMenuManager.addNewDayMenu(dayMenu));
@@ -90,8 +97,7 @@ public class DayMenuManagerTest {
 		}
 	}
 	
-	public void testDayMenuManagerDeleteDay() throws DayMenuServiceException {
-		DayMenuManager dayMenuManager = new DayMenuManager();
+	public void testDayMenuManagerDeleteDay() throws DayMenuServiceException, UserPrivilegesException {
 		
 		try {
 			assertTrue ("dayMenuManager Delete", dayMenuManager.deleteDayMenu(dayMenu));
@@ -103,20 +109,18 @@ public class DayMenuManagerTest {
 	
 	@After
 	public void cleanUp() {
-		FoodItemManager foodItemManager = new FoodItemManager();
-		MenuItemManager menuItemManager = new MenuItemManager();
 		
 		menuList.forEach(menu -> {
 			try {
 				menuItemManager.deleteMenuItem(menu);
-			} catch (ServiceLoadException | MenuItemServiceException e) {
+			} catch (ServiceLoadException | MenuItemServiceException | UserPrivilegesException e) {
 				e.printStackTrace();
 			}
 		});
 		foodList.forEach(food -> {
 			try {
 				foodItemManager.deleteFoodItem(food);
-			} catch (ServiceLoadException | FoodItemServiceException e) {
+			} catch (ServiceLoadException | FoodItemServiceException | UserPrivilegesException e) {
 				e.printStackTrace();
 			}
 		});

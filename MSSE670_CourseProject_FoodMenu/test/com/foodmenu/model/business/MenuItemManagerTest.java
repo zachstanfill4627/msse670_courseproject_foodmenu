@@ -12,11 +12,13 @@ import org.junit.After;
 import org.junit.Before;
 
 import com.foodmenu.model.business.exceptions.ServiceLoadException;
+import com.foodmenu.model.business.exceptions.UserPrivilegesException;
 import com.foodmenu.model.business.factory.ServiceFactory;
 import com.foodmenu.model.business.managers.FoodItemManager;
 import com.foodmenu.model.business.managers.MenuItemManager;
 import com.foodmenu.model.domain.FoodItem;
 import com.foodmenu.model.domain.MenuItem;
+import com.foodmenu.model.domain.User;
 import com.foodmenu.model.services.exceptions.FoodItemServiceException;
 import com.foodmenu.model.services.exceptions.MenuItemServiceException;
 
@@ -24,6 +26,9 @@ public class MenuItemManagerTest {
 	
 	private final String TestClass = "MenuItemManager";
 
+	private MenuItemManager menuItemManager;
+	private FoodItemManager foodItemManager;
+	
 	private ServiceFactory serviceFactory;
 	private MenuItem menuItem;
 	
@@ -32,14 +37,19 @@ public class MenuItemManagerTest {
 	@Before
 	public void setUp() throws Exception {
 		serviceFactory = new ServiceFactory();
-			
+		
+		ObjectInputStream adminObject = null;
 		ObjectInputStream menuItemObject = null;
 		try {
+			adminObject = new ObjectInputStream(new FileInputStream("data/testObjectFiles/user_testAdmin.obj"));
 			menuItemObject = new ObjectInputStream(new FileInputStream("data/testObjectFiles/menuItem_BaconEggsToast.obj"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		User admin = (User)adminObject.readObject(); 
 		
+		menuItemManager = new MenuItemManager(admin);
+		foodItemManager = new FoodItemManager(admin);
 		menuItem = (MenuItem)menuItemObject.readObject();
 		
 		foodList = menuItem.getFoodList();
@@ -56,13 +66,12 @@ public class MenuItemManagerTest {
 	}
 	
 	@Test
-	public void testMenuItemManager() throws MenuItemServiceException {
+	public void testMenuItemManager() throws MenuItemServiceException, UserPrivilegesException {
 		testAddMenu();
 		testDeleteMenu();
 	}
 	
 	public void testAddMenu() throws MenuItemServiceException {
-		MenuItemManager menuItemManager = new MenuItemManager();
 		
 		try {
 			assertTrue ("menuItemManager addNew", menuItemManager.addNewMenuItem(menuItem));
@@ -72,8 +81,7 @@ public class MenuItemManagerTest {
 		}
 	}
 	
-	public void testDeleteMenu() throws MenuItemServiceException {
-		MenuItemManager menuItemManager = new MenuItemManager();
+	public void testDeleteMenu() throws MenuItemServiceException, UserPrivilegesException {
 		
 		try {
 			assertTrue ("menuItemManager Delete", menuItemManager.deleteMenuItem(menuItem));
@@ -85,12 +93,11 @@ public class MenuItemManagerTest {
 	
 	@After
 	public void cleanUp() {
-		FoodItemManager foodItemManager = new FoodItemManager();
 		
 		foodList.forEach(food -> {
 			try {
 				foodItemManager.deleteFoodItem(food);
-			} catch (ServiceLoadException | FoodItemServiceException e) {
+			} catch (ServiceLoadException | FoodItemServiceException | UserPrivilegesException e) {
 				e.printStackTrace();
 			}
 		});

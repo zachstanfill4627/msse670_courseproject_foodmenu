@@ -10,14 +10,19 @@ import java.io.ObjectInputStream;
 import org.junit.Before;
 
 import com.foodmenu.model.business.exceptions.ServiceLoadException;
+import com.foodmenu.model.business.exceptions.UserPrivilegesException;
 import com.foodmenu.model.business.factory.ServiceFactory;
 import com.foodmenu.model.business.managers.FoodItemManager;
+import com.foodmenu.model.business.managers.UserManager;
 import com.foodmenu.model.domain.FoodItem;
+import com.foodmenu.model.domain.User;
 import com.foodmenu.model.services.exceptions.FoodItemServiceException;
 
 public class FoodItemManagerTest {
 
 	private final String TestClass = "FoodItemManager";
+	
+	private FoodItemManager foodItemManager;
 	
 	private ServiceFactory serviceFactory;
 	private FoodItem foodItem;
@@ -26,25 +31,26 @@ public class FoodItemManagerTest {
 	public void setUp() throws Exception {
 		serviceFactory = new ServiceFactory();
 		
-		
+		ObjectInputStream adminObject = null;
 		ObjectInputStream foodItemObject = null;
 		try {
+			adminObject = new ObjectInputStream(new FileInputStream("data/testObjectFiles/user_testAdmin.obj"));
 			foodItemObject = new ObjectInputStream(new FileInputStream("data/testObjectFiles/foodItem_Meatloaf.obj"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+		foodItemManager = new FoodItemManager((User)adminObject.readObject());
 		foodItem = (FoodItem)foodItemObject.readObject();
 	}
 	
 	@Test
-	public void testFoodItemManager() {
+	public void testFoodItemManager() throws UserPrivilegesException {
 		testAddFood();
 		testDeleteFood();
 	}
 	
 	public void testAddFood() {
-		FoodItemManager foodItemManager = new FoodItemManager();
+		
 		
 		try {
 			assertTrue ("foodItemManager addNew", foodItemManager.addNewFoodItem(foodItem));
@@ -54,8 +60,7 @@ public class FoodItemManagerTest {
 		}
 	}
 	
-	public void testDeleteFood() {
-		FoodItemManager foodItemManager = new FoodItemManager();
+	public void testDeleteFood() throws UserPrivilegesException {
 		
 		try {	
 			assertTrue ("foodItemManager Delete", foodItemManager.deleteFoodItem(foodItem));

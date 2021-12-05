@@ -37,7 +37,6 @@ public class UserSvcImplTest {
 		testUserDelete();
 	}
 	
-	
 	public void testUserCreate() throws UserServiceException {
 		UserSvcImpl impl = new UserSvcImpl();
 		
@@ -52,7 +51,8 @@ public class UserSvcImplTest {
 		} catch (IOException ex) {
 		  ex.printStackTrace();
 		}
-		*/  
+		*/
+		
 		
 		assertTrue ("testUser created", impl.createUserData(testUser, salt));
 		   System.out.println(TestClass + ".testUserCreate PASSED");
