@@ -232,7 +232,7 @@ public class UserManager {
     /**
      * Read Properties Files
      */
-	public static void readProperties() throws IOException {
+	private static void readProperties() throws IOException {
 		/** Read Configured Properties */
 		try (InputStream input = new FileInputStream(propertiesFile)) {
             Properties prop = new Properties();
@@ -358,7 +358,7 @@ public class UserManager {
 	 * Generate Salt Key
 	 * @return salt key
 	 */
-	public static String generateSaltKey() {
+	private static String generateSaltKey() {
 	    int leftLimit = 48; // numeral '0'
 	    int rightLimit = 122; // letter 'z'
 	    int targetStringLength = 32;
@@ -382,7 +382,7 @@ public class UserManager {
      * @param keyLength
      * @return
      */
-    public static byte[] hashPassword( final char[] password, final byte[] salt, final int iterations, final int keyLength ) {
+    private static byte[] hashPassword( final char[] password, final byte[] salt, final int iterations, final int keyLength ) {
 
         try {
             SecretKeyFactory skf = SecretKeyFactory.getInstance( "PBKDF2WithHmacSHA512" );
